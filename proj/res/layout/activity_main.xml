@@ -1,0 +1,142 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ma_rel_l"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#000000"
+    tools:context="${packageName}.${activityClass}" >
+    
+    <SurfaceView
+        android:id="@+id/videoView1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"/>
+	<RelativeLayout 
+	    android:id="@+id/interface_l"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+	 >
+    
+    <RelativeLayout
+        android:id="@+id/actionBar"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="0dp"
+        android:background="#80000000" >
+
+        <ImageButton
+            android:id="@+id/fullScreen"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:contentDescription="@string/app_name"
+            android:onClick="toggleInterface" />
+
+
+        <SearchView
+            android:id="@+id/channelSearch"
+			android:imeOptions="flagNoExtractUi"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="right"
+            android:ems="10"
+            android:inputType="text"
+            android:textColor="#f0f0f0" 
+            android:textSize="20sp" 
+            />
+        
+        <TextView
+            android:id="@+id/currentChannel"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@id/channelSearch"
+            android:layout_toRightOf="@id/fullScreen"
+            android:text=""
+            android:textColor="#f0f0f0"
+            android:textSize="30sp" />
+        
+    </RelativeLayout>
+        
+    <!--
+    <TextView
+        android:id="@+id/textViewEPG"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:text=""
+        android:textColor="#f0f0f0"
+        android:textSize="15sp" />
+    
+    <TextView
+        android:id="@+id/textViewTStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/textViewEPG"
+        android:text="" 
+        android:textColor="#f0f0f0" 
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/textViewTStop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/textViewEPG"
+        android:text="" 
+        android:textColor="#f0f0f0" 
+        android:textSize="15sp" />
+
+    <ProgressBar
+        android:id="@+id/progressBarEPG"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textViewEPG"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_toLeftOf="@id/textViewTStop"
+        android:layout_toRightOf="@id/textViewTStart" />
+    -->
+    <ListView
+        android:id="@+id/topicList"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/actionBar"
+        android:layout_centerVertical="false"
+        android:background="@drawable/spinner_grad"
+        android:choiceMode="singleChoice"
+        android:popupBackground="#202020" />
+
+    <ListView
+        android:id="@+id/listView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignTop="@id/topicList"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/topicList"
+        android:choiceMode="singleChoice"
+        android:divider="@drawable/divider_grad"
+        android:dividerHeight="2dp" >
+
+    </ListView>
+
+</RelativeLayout>    
+</RelativeLayout>
