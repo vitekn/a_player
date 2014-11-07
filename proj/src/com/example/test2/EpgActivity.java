@@ -3,10 +3,13 @@ package com.example.test2;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.videolan.libvlc.VlcPlayer;
+
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -34,7 +37,8 @@ public class EpgActivity extends Activity implements OnItemSelectedListener , On
 		
 		_app= (VideoApp)this.getApplication();
 		Spinner sp =(Spinner) findViewById(R.id.spinner1);
-		_t_adapter=new ArrayAdapter<String>(EpgActivity.this,R.layout.topic_item,new ArrayList<String>());
+		Log.d("epg","la1");
+		_t_adapter=new ArrayAdapter<String>(EpgActivity.this,R.layout.epg_topic,new ArrayList<String>());
 		sp.setAdapter(_t_adapter);
 		
 		ChannelsConfig.Topic t=_app.getAppConfig().getChannelsConfig().getTopics().get(0);
@@ -52,11 +56,29 @@ public class EpgActivity extends Activity implements OnItemSelectedListener , On
 		sp.setOnItemSelectedListener(this);
 		sp.setSelection(s);
 		
+		Log.d("epg","la2");
 		_list_adapter = new EpgListAdapter(EpgActivity.this, R.layout.epg_list_item, new ArrayList<EPGData>(),this);
+		Log.d("epg","la2 ok");
 		ListView lv = (ListView)findViewById(R.id.listView1);
 		lv.setAdapter(_list_adapter);		
 		
-		VideoView vv=(VideoView) findViewById(R.id.videoView1);
+		lv.setOnTouchListener( new OnSwipeTouchListener(this.getBaseContext()){
+			@Override
+			public void onSwipeLeft() {
+				finish();
+			}
+			@Override
+			public void onSwipeRight() {
+				finish();
+			}
+			
+		});
+		
+		VlcPlayer vv;
+		SurfaceView sv= (SurfaceView) findViewById(R.id.videoView1);
+		vv=new VlcPlayer(sv,this);
+
+//		VideoView vv=(VideoView) findViewById(R.id.videoView1);
 		vv.setVideoURI(Uri.parse(_app.getAppConfig().getCurChannel().getMrl()));
 		vv.start();
 /*		if (_all_ch.size()>0)
@@ -111,7 +133,7 @@ public class EpgActivity extends Activity implements OnItemSelectedListener , On
 				break;
 			}
 		}
-		//Log.d("EPGACT","selected f= "+fc + " " + s);
+		Log.d("EPGACT","selected f= "+_cur_chan.getName() );
 		if (_cur_chan!=null)
 		{
 			_list_adapter.clear();

@@ -1,8 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ma_rel_l"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="#000000"
     tools:context="${packageName}.${activityClass}" >
     
@@ -41,7 +41,15 @@
             android:layout_alignParentTop="true"
             android:contentDescription="@string/app_name"
             android:onClick="toggleInterface" />
-
+        
+        <ImageButton
+            android:id="@+id/epgButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_toRightOf="@id/fullScreen"
+            android:contentDescription="@string/app_name"
+            android:onClick="toggleEpg" />
+        
 
         <SearchView
             android:id="@+id/channelSearch"
@@ -63,7 +71,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@id/channelSearch"
-            android:layout_toRightOf="@id/fullScreen"
+            android:layout_toRightOf="@id/epgButton"
             android:text=""
             android:textColor="#f0f0f0"
             android:textSize="30sp" />

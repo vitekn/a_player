@@ -18,7 +18,7 @@ public class EpgListAdapter extends ArrayAdapter<EPGData> {
 	private OnListBoundReached _clb;
 	
 	public EpgListAdapter(Context context, int textViewResourceId,	List<EPGData> items,OnListBoundReached clb) {
-		super(context, textViewResourceId, items);
+		super(context, textViewResourceId,R.id.prog_title , items);
 		_items=items;
 		_context=context;
 		_layoutResourceId=textViewResourceId;

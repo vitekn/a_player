@@ -30,8 +30,12 @@
             </intent-filter>
         </activity>
         <activity android:name="VideoActivity"></activity>
-        <activity android:name="LoginActivity"></activity>
-        <activity android:name="EpgActivity"></activity>
+        <activity android:name="LoginActivity">
+            android:screenOrientation="landscape"
+        </activity>
+        <activity android:name="EpgActivity">
+            android:screenOrientation="landscape"
+        </activity>
     </application>
 
 </manifest>

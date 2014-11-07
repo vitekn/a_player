@@ -197,6 +197,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 		{
 			initData();
 		}
+		//setOnTouchListener();
 		/*
 		View ev=findViewById(R.id.textViewEPG);
 		ev.setOnClickListener(new OnClickListener(){
@@ -517,6 +518,13 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 		RelativeLayout il =(RelativeLayout) findViewById(R.id.interface_l);
 		if (il.getVisibility()==View.VISIBLE)
 			il.setVisibility(View.INVISIBLE);
+	}
+	public void toggleEpg(View v)
+	{
+		Intent ni=new Intent(v.getContext(),EpgActivity.class);
+		startActivity(ni);
+		return;
+		
 	}
 	
 }
