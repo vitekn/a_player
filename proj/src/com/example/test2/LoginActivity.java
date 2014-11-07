@@ -33,7 +33,6 @@ public class LoginActivity extends Activity {
 		EditText p=(EditText) findViewById(R.id.editText2);
 		
 		app.getAppService().login(this,l.getText().toString(),p.getText().toString());
-//		app.getAppService().login(this,"demo","demo123");
 		ProgressBar pb=(ProgressBar) findViewById(R.id.progressBarEPG);
 		pb.setVisibility(View.VISIBLE);
 	}

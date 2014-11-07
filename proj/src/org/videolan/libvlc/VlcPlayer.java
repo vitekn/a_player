@@ -195,7 +195,6 @@ public class VlcPlayer implements SurfaceHolder.Callback,IVideoPlayer {
 
         @Override
         public void handleMessage(Message msg) {
-            Log.d("VLCPLAYER","hm");
         	VlcPlayer player = mOwner.get();
 
             // SamplePlayer events
@@ -217,8 +216,6 @@ public class VlcPlayer implements SurfaceHolder.Callback,IVideoPlayer {
             default:
                 break;
             }
-            Log.d("VLCPLAYER","hm ok");
-
         }
     }
 }

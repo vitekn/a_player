@@ -78,49 +78,6 @@
         
     </RelativeLayout>
         
-    <!--
-    <TextView
-        android:id="@+id/textViewEPG"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:text=""
-        android:textColor="#f0f0f0"
-        android:textSize="15sp" />
-    
-    <TextView
-        android:id="@+id/textViewTStart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/textViewEPG"
-        android:text="" 
-        android:textColor="#f0f0f0" 
-        android:textSize="15sp" />
-
-    <TextView
-        android:id="@+id/textViewTStop"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/textViewEPG"
-        android:text="" 
-        android:textColor="#f0f0f0" 
-        android:textSize="15sp" />
-
-    <ProgressBar
-        android:id="@+id/progressBarEPG"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/textViewEPG"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_toLeftOf="@id/textViewTStop"
-        android:layout_toRightOf="@id/textViewTStart" />
-    -->
     <ListView
         android:id="@+id/topicList"
         android:layout_width="80dp"
@@ -146,5 +103,41 @@
 
     </ListView>
 
-</RelativeLayout>    
+	</RelativeLayout>
+	
+	<RelativeLayout 
+	    android:id="@+id/epg_l"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+	 >
+        <Spinner
+        android:id="@+id/epg_spinner"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:alpha="0.75" 
+        android:background="#000000"
+        android:popupBackground="#202020" />
+
+    <ListView
+        android:id="@+id/epg_listView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/epg_spinner"
+        android:background="#000000"
+        android:divider="@drawable/divider_grad"
+        android:dividerHeight="2dp"
+        android:alpha="0.75" >
+
+    </ListView>
+	    
+	    
+	    
+	</RelativeLayout>
+	
 </RelativeLayout>

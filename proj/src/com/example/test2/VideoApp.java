@@ -40,14 +40,16 @@ public class VideoApp extends Application {
 			String hw=getHW();
 			_prot.channelsRequest(hw,this);
 		}
-		public void loadEPG(Activity r_act,ChannelsConfig.Channel ch){
-			_r_act=r_act;
+		public void loadEPG(MiddlewareProto.ProtoEvents pre,ChannelsConfig.Channel ch){
+			if (pre==null)
+				pre=this;
 			ch.epgClear();
-			_prot.epgRequest(ch,null,null,this);
+			_prot.epgRequest(ch,null,null,pre);
 		}		
-		public void loadEPG(Activity r_act,ChannelsConfig.Channel ch,Date from,Date to){
-			_r_act=r_act;
-			_prot.epgRequest(ch,from,to,this);
+		public void loadEPG(MiddlewareProto.ProtoEvents pre,ChannelsConfig.Channel ch,Date from,Date to){
+			if (pre==null)
+				pre=this;
+			_prot.epgRequest(ch,from,to,pre);
 		}		
 		private String getHW()
 		{
@@ -85,21 +87,6 @@ public class VideoApp extends Application {
 		@Override
 		public void onEPGUploaded(Channel ch) {
 			Log.d("APP","epg uploaded");
-			if (_r_act instanceof MainActivity)
-			{
-				Log.d("APP","epg uploaded activity is MA");
-				if (getAppConfig().getCurChannel().getMrl().equalsIgnoreCase(ch.getMrl()))
-				{
-					Log.d("APP","epg uploaded same channel");
-			//	((MainActivity)_r_act).refreshEPGDisplay(ch);
-				}
-			}
-			else
-				if (_r_act instanceof EpgActivity)
-				{
-					Log.d("APP","epg uploaded activity is EP");
-					((EpgActivity)_r_act).refreshList(ch); 
-				}
 		}
 		public boolean isConfigLoading(){return _config_loading;}
 	}
@@ -131,7 +118,9 @@ public class VideoApp extends Application {
 	}
 	
 	
-		
+	
+	private ViewManager.AppViewState _app_vs=ViewManager.AppViewState.INTERFACE;
+	private ViewManager _vmng=null;
 	private AppService _app_serv = new AppService(new AresMiddlewareProto(this));
 	private AppConfig _app_conf=new AppConfig(); 
 	
@@ -141,5 +130,27 @@ public class VideoApp extends Application {
 	
 	public AppService getAppService(){return _app_serv;}
 	public AppConfig  getAppConfig(){return _app_conf;}
+	public void setViewManager (ViewManager vm){_vmng=vm;}
+	public ViewManager.AppViewState getViewState(){return _app_vs;}
+	public void setNextView(){setViewState(_app_vs.getNext());}
+	public void setPrevView(){setViewState(_app_vs.getPrev());}
+	public void setViewState(ViewManager.AppViewState s){
+		ViewManager.AppViewState old=_app_vs;
+		_app_vs=s;
+		if (_vmng!=null)
+			switch (_app_vs)
+			{
+				case INTERFACE:
+					_vmng.onViewInterface(old);
+					break;
+				case EPG:
+					_vmng.onViewEpg(old);
+					break;
+				case VIDEO:
+					_vmng.onViewVideo(old);
+					break;
+			}
+		}
+	
 	
 }
