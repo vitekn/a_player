@@ -3,6 +3,8 @@ package com.example.test2;
 
 import java.util.Date;
 
+import org.videolan.libvlc.VlcPlayer;
+
 import com.example.test2.ChannelsConfig.Channel;
 
 import android.app.Activity;
@@ -123,7 +125,7 @@ public class VideoApp extends Application {
 	private ViewManager _vmng=null;
 	private AppService _app_serv = new AppService(new AresMiddlewareProto(this));
 	private AppConfig _app_conf=new AppConfig(); 
-	
+	private VlcPlayer _video_player;
 	//public String getSomeString(){return "123";}
 	//public void setCurrentMedia(String m){_current_media=m;}
 	//public String getCurrentMedia(){return _current_media;}
@@ -151,6 +153,12 @@ public class VideoApp extends Application {
 					break;
 			}
 		}
+	public VlcPlayer getVideoPlayer() {
+		return _video_player;
+	}
+	public void setVideoPlayer(VlcPlayer _video_player) {
+		this._video_player = _video_player;
+	}
 	
 	
 }

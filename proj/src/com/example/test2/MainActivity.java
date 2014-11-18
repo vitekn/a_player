@@ -151,7 +151,9 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 		//findViewById(R.id.ma_rel_l).getViewTreeObserver().addOnGlobalLayoutListener(new ReLayout());
 
 		SurfaceView sv= (SurfaceView) findViewById(R.id.videoView1);
-		vv=new VlcPlayer(sv,this);/*
+		vv=new VlcPlayer(sv,this);
+		app.setVideoPlayer(vv);
+		/*
 		sv.setOnTouchListener(new OnSwipeTouchListener(this){
 			@Override
 			public void onSwipeLeft() {
@@ -357,10 +359,10 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 		//	SurfaceView sv= (SurfaceView) findViewById(R.id.videoView1);
 //			vv=new VlcPlayer(sv,this);
 			vv.setVideoURI(Uri.parse(cch.getMrl()));
+			vv.start();
 			//vv.setVideoURI(Uri.parse("http://192.168.101.29/hls/TNT/TNT.m3u8"));
 //			app.setCurrentMedia(ch.getName());
 			//app.setCurrentMedia("http://192.168.101.29/hls/TNT/TNT.m3u8");
-			vv.start();
 		//	refreshEPGDisplay(cch);
 		}	
 	}

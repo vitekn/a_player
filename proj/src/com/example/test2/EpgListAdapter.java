@@ -1,5 +1,6 @@
 package com.example.test2;
 
+import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
@@ -38,8 +39,17 @@ public class EpgListAdapter extends ArrayAdapter<EPGData> {
 			EPGData ei=_items.get(position);
 			TextView tv=(TextView)row.findViewById(R.id.prog_start);
 			tv.setText(ei.getStartDayTime());
+			if (!ei.getUrl().isEmpty())
+				tv.setTextColor(0xFFC0FFC0);
+			else
+				if (ei.getStart().before(new Date()))
+					tv.setTextColor(0xFFD0D0D0);
+			tv.setTag(ei);
+				
 			tv=(TextView)row.findViewById(R.id.prog_title);
 			tv.setText(ei.getTitle());
+			tv.setTag(ei);
+			row.setTag(ei);
 			if (position==0)
 				_clb.upperBound();
 			else if (position==(_items.size()-1))

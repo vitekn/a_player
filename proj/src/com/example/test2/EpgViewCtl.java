@@ -2,11 +2,16 @@ package com.example.test2;
 
 import java.util.ArrayList;
 import java.util.Date;
+
 import com.example.test2.ChannelsConfig.Channel;
+
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -21,13 +26,26 @@ public class EpgViewCtl implements OnItemSelectedListener , OnListBoundReached,M
 	private Date _item_to_select=new Date();
 	private ListView _epg_l;
 	private Spinner _sp;
-	
+	 class EpgListClick implements OnItemClickListener{
+
+		@Override
+		public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,long arg3) {
+			EPGData epg=(EPGData)arg1.getTag();
+			if (_cur_chan!=null)
+			{
+				String ts=_cur_chan.getTimeShiftUrlForProgramm(epg);
+				_app.getVideoPlayer().setVideoURI(Uri.parse(ts));
+				_app.getVideoPlayer().start();
+			}
+		}
+	 }
+
 	public EpgViewCtl(VideoApp a,Context ctx,Spinner s,ListView l){
 		
 		_app= a;
 		_sp =s;
 		_epg_l=l;
-		
+		_epg_l.setOnItemClickListener(new EpgListClick());
 		Log.d("epg","la1");
 		_t_adapter=new ArrayAdapter<String>(ctx,R.layout.epg_topic,new ArrayList<String>());
 		_sp.setAdapter(_t_adapter);
@@ -192,5 +210,6 @@ public class EpgViewCtl implements OnItemSelectedListener , OnListBoundReached,M
 	public void onEPGUploaded(Channel ch) {
 		refreshList(ch);
 	}
+
 
 }

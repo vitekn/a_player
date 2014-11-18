@@ -7,6 +7,7 @@ public class EPGData {
 	private Date _start;
 	private Date _stop;
 	private String _title;
+	private String _url="";
 	
 	public EPGData (Date start,Date stop,String title){_start=start;_stop=stop;_title=title;}
 	public String getTitle(){return _title;}
@@ -28,4 +29,10 @@ public class EPGData {
 	}
 	public Date getStop(){return _stop;}
 	public Date getStart(){return _start;}
+	public String getUrl() {
+		return _url;
+	}
+	public void setUrl(String _url) {
+		this._url = _url;
+	}
 }

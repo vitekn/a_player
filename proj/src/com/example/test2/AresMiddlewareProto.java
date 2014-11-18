@@ -260,8 +260,10 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 						String n=ch.getString("name");
 						String m=ch.getString("mrl");
 						String u=ch.getString("logo");
+						String tm_url=ch.getString("timeshift_url");
+						int tm_dur=ch.getInt("timeshift_archive_length");
 						int id=ch.getInt("channel_id");
-						t.addChannel(n,m,u,id);
+						t.addChannel(n,m,u,id,tm_url,tm_dur);
 						break;
 					}
 				}

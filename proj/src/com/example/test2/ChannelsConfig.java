@@ -53,16 +53,31 @@ public class ChannelsConfig {
 	class Channel extends GenItem {
 		private String _mrl;
 		private ArrayList<EPGData> _epg=new ArrayList<EPGData>();	
-		boolean _epg_present=true;
+		private boolean _epg_present=true;
+		private String _timeshift_url;
+		private int _timeshift_duration;
 		
-		public Channel(String name,String mrl,String icon_url,int id){
+		public Channel(String name,String mrl,String icon_url,int id,String tm_url,int tm_dur){
 			super(name,icon_url,id);
 			_mrl=mrl;
+			_timeshift_url=tm_url;
+			_timeshift_duration=tm_dur;
 		}
 		public String getMrl(){
 			Log.d("CHANNEL","getMrl");
 			return _mrl;}
 		
+		public String getTimeShiftUrlForProgramm(EPGData epg)
+		{
+			String url="";
+			Date now=new Date();
+			long dur=(now.getTime()-epg.getStop().getTime())/1000;
+			if (!_timeshift_url.isEmpty() && dur>60 && (_timeshift_duration)>dur)
+			{
+				url=_timeshift_url+"/timeshift_abs/"+((long)(epg.getStop().getTime()/1000));
+			}
+			return url;
+		}
 		public boolean canUploadEpg(){ return _epg_present;}
 		public void epgFail() {_epg_present=false;}
 		public void epgClear(){_epg.clear();}
@@ -84,7 +99,7 @@ public class ChannelsConfig {
 			} while (i<_epg.size());
 
 //			Log.d("CHANNEL","add epg "+ epg.getTitle() +" t "+epg.getStartTime()+" at "+i);
-			
+			epg.setUrl(getTimeShiftUrlForProgramm(epg));
 			_epg.add(i,epg);
 			_epg_present=true;
 			
@@ -153,7 +168,10 @@ public class ChannelsConfig {
 			super(name,icon_url,id);
 		}
 		public ArrayList<Channel> getChannels(){return _channels;}
-		public void addChannel(String name,String mrl,String icon_url,int id){_channels.add(new Channel(name,mrl,icon_url,id));}
+		public void addChannel(String name,String mrl,String icon_url,int id,String tm_url,int tm_dur)
+		{
+			_channels.add(new Channel(name,mrl,icon_url,id,tm_url,tm_dur));
+		}
 	}
 	
 	private ArrayList<Topic> _topics=new ArrayList<Topic>();
