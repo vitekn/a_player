@@ -2,6 +2,8 @@ package com.example.test2;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.videolan.libvlc.VlcPlayer;
 
@@ -9,6 +11,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -25,10 +28,13 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
 //import android.widget.VideoView;
@@ -41,6 +47,8 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 	 private VideoApp app;
 	 private EpgViewCtl _epg_vc;
 	 private OnSwipeTouchListener _swipe_detector;
+	 private SeekBar _player_pb;
+	 private Timer _hide_tm=new Timer();
 	 boolean _data_ok=false;
 	 boolean _select_topic=true;
 	 VlcPlayer vv;
@@ -111,8 +119,10 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 	 
 	 @Override
 	 public boolean dispatchTouchEvent (MotionEvent ev) {
-		 _swipe_detector.onTouch(null, ev);
-		 return super.dispatchTouchEvent(ev);
+		 
+		 boolean sw=_swipe_detector.onTouch(null, ev);
+		 
+		 return super.dispatchTouchEvent(ev) || sw;
 		 
 	 }
 	 
@@ -150,58 +160,51 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 
 		//findViewById(R.id.ma_rel_l).getViewTreeObserver().addOnGlobalLayoutListener(new ReLayout());
 
+		ImageButton plb=(ImageButton)findViewById(R.id.player_play);
+		plb.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View arg0) {
+				vv.togglePause();
+			}
+		});
+		_player_pb=(SeekBar)findViewById(R.id.player_bar);
+		_player_pb.setMax(1000);
+		_player_pb.setOnSeekBarChangeListener(new OnSeekBarChangeListener(){
+
+			@Override
+			public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {
+				vv.setPosition(((float)arg1)/1000);
+			}
+			@Override
+			public void onStartTrackingTouch(SeekBar arg0) {}
+			@Override
+			public void onStopTrackingTouch(SeekBar arg0) {}
+			
+		});
 		SurfaceView sv= (SurfaceView) findViewById(R.id.videoView1);
 		vv=new VlcPlayer(sv,this);
 		app.setVideoPlayer(vv);
-		/*
-		sv.setOnTouchListener(new OnSwipeTouchListener(this){
+		vv.setPlayerEventsListener(new VlcPlayer.PlayerEventsListener(){
 			@Override
-			public void onSwipeLeft() {
-				app.setNextView();
+			public void onPositionChanged() {
+				int pos=(int)(vv.getPosition()*1000);
+				if (pos>=0)
+					_player_pb.setProgress(pos);
 			}
-			@Override
-			public void onSwipeRight() {
-				app.setPrevView();
-				
-			}
-		});*/
-		/*
-		findViewById(R.id.swipe_l).setOnTouchListener(new OnSwipeTouchListener(this){
-			@Override
-			public void onSwipeLeft() {
-				app.setNextView();
-			}
-			@Override
-			public void onSwipeRight() {
-				app.setPrevView();
-				
-			}
-		});*/
+		});
 		Log.d("MAINACT","1");
 		ListView elv=(ListView)findViewById(R.id.epg_listView);
 		Log.d("MAINACT","2");
-		/*
-		elv.setOnTouchListener(new OnSwipeTouchListener(this){
-			@Override
-			public void onSwipeLeft() {
-				app.setNextView();
-			}
-			@Override
-			public void onSwipeRight() {
-				app.setPrevView();
-				
-			}
-		});*/
-		Log.d("MAINACT","3");
 		hideView(AppViewState.EPG);
+		hideView(AppViewState.VIDEO);
 		Log.d("MAINACT","4");
-/*				new SurfaceView.OnTouchListener(){
-
+		sv.setOnTouchListener(new SurfaceView.OnTouchListener(){
 			@Override
 			public boolean onTouch(View arg0, MotionEvent arg1) {
-				findViewById(R.id.interface_l).setVisibility(View.VISIBLE);
+				if (app.getViewState()==AppViewState.VIDEO)
+					onViewVideo(AppViewState.VIDEO);
 				return false;
-			}}); */
+			}}); 
 
 		
 		SearchView tv = (SearchView)findViewById(R.id.channelSearch);
@@ -358,8 +361,10 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 			//vv.release();
 		//	SurfaceView sv= (SurfaceView) findViewById(R.id.videoView1);
 //			vv=new VlcPlayer(sv,this);
+			hideView(AppViewState.VIDEO);
 			vv.setVideoURI(Uri.parse(cch.getMrl()));
 			vv.start();
+			
 			//vv.setVideoURI(Uri.parse("http://192.168.101.29/hls/TNT/TNT.m3u8"));
 //			app.setCurrentMedia(ch.getName());
 			//app.setCurrentMedia("http://192.168.101.29/hls/TNT/TNT.m3u8");
@@ -560,11 +565,23 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 	}
 	public void hideView(AppViewState v)
 	{
-		if (v==AppViewState.INTERFACE)
-			findViewById(R.id.interface_l).setVisibility(View.INVISIBLE);
-		else
-		if (v==AppViewState.EPG)
-			findViewById(R.id.epg_l).setVisibility(View.INVISIBLE);
+		switch (v)
+		{
+			case INTERFACE:
+				findViewById(R.id.interface_l).setVisibility(View.INVISIBLE);
+			break;
+			case EPG:
+				findViewById(R.id.epg_l).setVisibility(View.INVISIBLE);
+			break;
+			case VIDEO:
+				try{
+				_hide_tm.cancel();
+				_hide_tm.purge();
+				}catch(Exception e){}
+				findViewById(R.id.player_ctl_l).setVisibility(View.INVISIBLE);
+				
+		}
+			
 	}
 	
 	@Override
@@ -583,6 +600,20 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 	@Override
 	public void onViewVideo(AppViewState from) {
 		hideView(from);
+		if (vv.isSeekable())
+		{
+			final Handler hnd=new Handler();
+			_hide_tm=new Timer();
+			_hide_tm.schedule(new TimerTask(){
+				@Override
+				public void run() {
+					hnd.post(new Runnable(){
+						public void run(){hideView(AppViewState.VIDEO);}
+					});
+				}
+			}, 5000);
+			findViewById(R.id.player_ctl_l).setVisibility(View.VISIBLE);
+		}
 	}
 	
 }

@@ -56,6 +56,7 @@ public class ChannelsConfig {
 		private boolean _epg_present=true;
 		private String _timeshift_url;
 		private int _timeshift_duration;
+		private boolean _epg_loading=false;
 		
 		public Channel(String name,String mrl,String icon_url,int id,String tm_url,int tm_dur){
 			super(name,icon_url,id);
@@ -63,6 +64,10 @@ public class ChannelsConfig {
 			_timeshift_url=tm_url;
 			_timeshift_duration=tm_dur;
 		}
+		public boolean isEpgLoading(){return _epg_loading;}
+		public void epgLoading(){_epg_loading=true;}
+		public void epgUploaded(){_epg_loading=false;}
+		
 		public String getMrl(){
 			Log.d("CHANNEL","getMrl");
 			return _mrl;}
@@ -71,10 +76,10 @@ public class ChannelsConfig {
 		{
 			String url="";
 			Date now=new Date();
-			long dur=(now.getTime()-epg.getStop().getTime())/1000;
-			if (!_timeshift_url.isEmpty() && dur>60 && (_timeshift_duration)>dur)
+			long dur=(now.getTime()-epg.getStart().getTime())/1000;
+			if (!_timeshift_url.isEmpty() && dur>60 && (_timeshift_duration)>dur && epg.getStop().before(now))
 			{
-				url=_timeshift_url+"/timeshift_abs/"+((long)(epg.getStop().getTime()/1000));
+				url=_timeshift_url+"/index-"+((long)(epg.getStart().getTime()/1000))+"-"+((long)(epg.getStop().getTime()/1000))+".m3u8";
 			}
 			return url;
 		}

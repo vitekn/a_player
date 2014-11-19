@@ -20,8 +20,12 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.ViewGroup.LayoutParams;
 
+
 public class VlcPlayer implements SurfaceHolder.Callback,IVideoPlayer {
 	
+	public interface PlayerEventsListener{
+		void onPositionChanged();
+	}
 	private SurfaceView _surface;
 	private SurfaceHolder _holder;
 
@@ -29,9 +33,12 @@ public class VlcPlayer implements SurfaceHolder.Callback,IVideoPlayer {
 	private LibVLC _libvlc=null;
 	private int _videoWidth;
 	private int _videoHeight;
+	private boolean _is_paused=false;
 	private Activity _act;
 	private final static int VideoSizeChanged = -1;
+	private static PlayerEventsListener _pl_events=null;
 	
+	public void setPlayerEventsListener(PlayerEventsListener pl_events){_pl_events=pl_events;}
 	public VlcPlayer(SurfaceView sv,Activity act)
 	{
 		_surface=sv;
@@ -135,9 +142,10 @@ public class VlcPlayer implements SurfaceHolder.Callback,IVideoPlayer {
     }
     
     public void setVideoURI(Uri um) {
-        Log.d("VLCPLAYER","svu");
         //release();
         String media=um.toString();
+        Log.d("VLCPLAYER","svu "+media);
+        _is_paused=false;
         try {
 /*            if (media.length() > 0) {
                 Toast toast = Toast.makeText(this, media, Toast.LENGTH_LONG);
@@ -147,20 +155,45 @@ public class VlcPlayer implements SurfaceHolder.Callback,IVideoPlayer {
             }*/
 
             // Create a new media player
-            if (_libvlc.isPlaying())
-            	_libvlc.stop();
-//            MediaList list = _libvlc.getMediaList();
+        		stop();
+        		//  MediaList list = _libvlc.getMediaList();
   //          Log.d("VLCPLAYER","svu mlc");
     //        list.clear();
       //      Log.d("VLCPLAYER","svu addm");
         //    list.add(new Media(_libvlc, media), false);
 //            _libvlc.playIndex(0);
+            
             	_libvlc.playMRL(media);
         } catch (Exception e) {
             //Toast.makeText(this, "Error creating player!", Toast.LENGTH_LONG).show();
         }
         Log.d("VLCPLAYER","svu ok");
     }
+    public void setPosition(float pos)
+    {
+    	_libvlc.setPosition(pos);
+    }
+    public float getPosition(){
+    	return _libvlc.getPosition();
+    }
+    public boolean isSeekable()
+    {
+    	return _libvlc.isSeekable();
+    }
+    public void togglePause()
+    {
+    	_is_paused= !_is_paused;    	
+    	if (_is_paused)
+    		_libvlc.pause();
+    	else
+    		_libvlc.play();
+    }
+    public void stop()
+    {
+        if (_libvlc.isPlaying())
+        	_libvlc.stop();
+    }
+    
     public void start(){
         Log.d("VLCPLAYER","st");
         //if (_libvlc!=null)
@@ -207,8 +240,12 @@ public class VlcPlayer implements SurfaceHolder.Callback,IVideoPlayer {
             // Libvlc events
             Bundle b = msg.getData();
             switch (b.getInt("event")) {
+            case EventHandler.MediaPlayerPositionChanged:
+            	if (_pl_events!=null)
+            		_pl_events.onPositionChanged();
+            	break;
             case EventHandler.MediaPlayerEndReached:
-                player.release();
+             //   player.release();
                 break;
             case EventHandler.MediaPlayerPlaying:
             case EventHandler.MediaPlayerPaused:

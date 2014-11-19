@@ -139,5 +139,35 @@
 	    
 	    
 	</RelativeLayout>
-	
+	<RelativeLayout 
+	    android:id="@+id/player_ctl_l"
+	    android:layout_width="fill_parent"
+	    android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+	 >
+    
+        <ImageButton
+            android:id="@+id/player_play"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:contentDescription="@string/app_name"
+            android:onClick="toggleInterface" />
+
+	     <SeekBar
+	         android:id="@+id/player_bar"
+	         style="?android:attr/progressBarStyleHorizontal"
+	         android:layout_width="fill_parent"
+	         android:layout_height="wrap_content"
+	         android:layout_centerVertical="true"
+	         android:layout_marginLeft="10dp"
+	         android:layout_marginRight="10dp"
+	         android:layout_toRightOf="@id/player_play" />
+        	    
+	</RelativeLayout>
+	    		
 </RelativeLayout>

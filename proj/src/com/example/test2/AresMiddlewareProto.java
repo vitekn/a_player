@@ -103,6 +103,7 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 		_req_pairs.add(rrp);
 		rrp.req_data=new ReqDataEPG(ch);
 		rrp.clb=clb;
+		ch.epgLoading();
 		rrp.resp= (SendHttpRequest)	new SendHttpRequest((MiddlewareProto)this,(OnHttpRequestComplete)this).execute("https://demo.iptvportal.ru/jsonrpc/",req,Integer.toString(rrp.getId()));
 		
 	}
@@ -229,6 +230,7 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 							epgrd.getChannel().addEpgData(epg);
 							
 						}
+						epgrd.getChannel().epgUploaded();
 						pre.onEPGUploaded(epgrd.getChannel());
 					}
 				}catch (Exception e)
@@ -260,8 +262,12 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 						String n=ch.getString("name");
 						String m=ch.getString("mrl");
 						String u=ch.getString("logo");
-						String tm_url=ch.getString("timeshift_url");
-						int tm_dur=ch.getInt("timeshift_archive_length");
+						String tm_url="";
+						int tm_dur=0;
+						try{
+							tm_url=ch.getString("timeshift_url");
+							tm_dur=ch.getInt("timeshift_archive_length");
+						}catch(Exception e){}
 						int id=ch.getInt("channel_id");
 						t.addChannel(n,m,u,id,tm_url,tm_dur);
 						break;

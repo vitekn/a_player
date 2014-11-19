@@ -34,8 +34,11 @@ public class EpgViewCtl implements OnItemSelectedListener , OnListBoundReached,M
 			if (_cur_chan!=null)
 			{
 				String ts=_cur_chan.getTimeShiftUrlForProgramm(epg);
-				_app.getVideoPlayer().setVideoURI(Uri.parse(ts));
-				_app.getVideoPlayer().start();
+				if (!ts.isEmpty())
+				{
+					_app.getVideoPlayer().setVideoURI(Uri.parse(ts));
+					_app.getVideoPlayer().start();
+				}
 			}
 		}
 	 }
@@ -144,7 +147,7 @@ public class EpgViewCtl implements OnItemSelectedListener , OnListBoundReached,M
 	public void upperBound() {
 		Log.d("EPGACT","upb");
 		
-		if (_cur_chan!=null)
+		if (_cur_chan!=null && !_cur_chan.isEpgLoading())
 		{
 //			upb=false;
 			ArrayList<EPGData> el= _cur_chan.getAllEpgData();
