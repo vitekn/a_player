@@ -13,6 +13,7 @@ import android.content.Context;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.util.Log;
+import android.view.animation.Animation;
 
 public class VideoApp extends Application {
 
@@ -134,22 +135,22 @@ public class VideoApp extends Application {
 	public AppConfig  getAppConfig(){return _app_conf;}
 	public void setViewManager (ViewManager vm){_vmng=vm;}
 	public ViewManager.AppViewState getViewState(){return _app_vs;}
-	public void setNextView(){setViewState(_app_vs.getNext());}
-	public void setPrevView(){setViewState(_app_vs.getPrev());}
-	public void setViewState(ViewManager.AppViewState s){
+	public void setNextView(Animation a){setViewState(_app_vs.getNext(),a);}
+	public void setPrevView(Animation a){setViewState(_app_vs.getPrev(),a);}
+	public void setViewState(ViewManager.AppViewState s,Animation a){
 		ViewManager.AppViewState old=_app_vs;
 		_app_vs=s;
 		if (_vmng!=null)
 			switch (_app_vs)
 			{
 				case INTERFACE:
-					_vmng.onViewInterface(old);
+					_vmng.onViewInterface(old,a);
 					break;
 				case EPG:
-					_vmng.onViewEpg(old);
+					_vmng.onViewEpg(old,a);
 					break;
 				case VIDEO:
-					_vmng.onViewVideo(old);
+					_vmng.onViewVideo(old,a);
 					break;
 			}
 		}

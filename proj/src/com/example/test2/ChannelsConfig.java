@@ -79,7 +79,7 @@ public class ChannelsConfig {
 			long dur=(now.getTime()-epg.getStart().getTime())/1000;
 			if (!_timeshift_url.isEmpty() && dur>60 && (_timeshift_duration)>dur && epg.getStop().before(now))
 			{
-				url=_timeshift_url+"/index-"+((long)(epg.getStart().getTime()/1000))+"-"+((long)(epg.getStop().getTime()/1000))+".m3u8";
+				url=_timeshift_url+"/index-"+((long)(epg.getStart().getTime()/1000))+"-"+(((long)(epg.getStop().getTime()/1000))-((long)(epg.getStart().getTime()/1000)))+".m3u8";
 			}
 			return url;
 		}

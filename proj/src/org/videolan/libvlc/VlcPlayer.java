@@ -174,7 +174,10 @@ public class VlcPlayer implements SurfaceHolder.Callback,IVideoPlayer {
     	_libvlc.setPosition(pos);
     }
     public float getPosition(){
-    	return _libvlc.getPosition();
+    	if (_libvlc!=null)
+    		return _libvlc.getPosition();
+    	else
+    		return -1;
     }
     public boolean isSeekable()
     {

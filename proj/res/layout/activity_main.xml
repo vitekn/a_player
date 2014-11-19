@@ -113,29 +113,38 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
 	 >
+
         <Spinner
-        android:id="@+id/epg_spinner"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:alpha="0.75" 
-        android:background="#000000"
-        android:popupBackground="#202020" />
+            android:id="@+id/epg_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:alpha="0.75"
+            android:background="#000000"
+            android:popupBackground="#202020" />
 
-    <ListView
-        android:id="@+id/epg_listView"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/epg_spinner"
-        android:background="#000000"
-        android:divider="@drawable/divider_grad"
-        android:dividerHeight="2dp"
-        android:alpha="0.75" >
 
-    </ListView>
-	    
+	    <ListView
+	        android:id="@+id/epg_listView"
+	        android:layout_width="fill_parent"
+	        android:layout_height="fill_parent"
+	        android:layout_alignParentLeft="true"
+	        android:layout_below="@+id/epg_spinner"
+	        android:background="#000000"
+	        android:divider="@drawable/divider_grad"
+	        android:dividerHeight="2dp"
+	        android:alpha="0.75" >
+	    </ListView>
+    	
+    	<ProgressBar
+    	    android:id="@+id/progressEpgLoading"
+    	    style="?android:attr/progressBarStyleLarge"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:layout_centerHorizontal="true"
+    	    android:layout_centerVertical="true"
+    	    android:layout_marginRight="10dp" />
 	    
 	    
 	</RelativeLayout>

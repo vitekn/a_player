@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.AdapterView.OnItemSelectedListener;
 
@@ -26,6 +27,7 @@ public class EpgViewCtl implements OnItemSelectedListener , OnListBoundReached,M
 	private Date _item_to_select=new Date();
 	private ListView _epg_l;
 	private Spinner _sp;
+	private ProgressBar _epg_prog;
 	 class EpgListClick implements OnItemClickListener{
 
 		@Override
@@ -43,11 +45,13 @@ public class EpgViewCtl implements OnItemSelectedListener , OnListBoundReached,M
 		}
 	 }
 
-	public EpgViewCtl(VideoApp a,Context ctx,Spinner s,ListView l){
+	public EpgViewCtl(VideoApp a,Context ctx,Spinner s,ListView l,ProgressBar ep){
 		
 		_app= a;
 		_sp =s;
 		_epg_l=l;
+		_epg_prog=ep;
+		_epg_prog.setVisibility(View.INVISIBLE);
 		_epg_l.setOnItemClickListener(new EpgListClick());
 		Log.d("epg","la1");
 		_t_adapter=new ArrayAdapter<String>(ctx,R.layout.epg_topic,new ArrayList<String>());
@@ -149,6 +153,7 @@ public class EpgViewCtl implements OnItemSelectedListener , OnListBoundReached,M
 		
 		if (_cur_chan!=null && !_cur_chan.isEpgLoading())
 		{
+			_epg_prog.setVisibility(View.VISIBLE);
 //			upb=false;
 			ArrayList<EPGData> el= _cur_chan.getAllEpgData();
 			if (el.size()>0)
@@ -174,8 +179,10 @@ public class EpgViewCtl implements OnItemSelectedListener , OnListBoundReached,M
 
 	@Override
 	public void lowerBound() {
-		if (_cur_chan!=null)
+		if (_cur_chan!=null && !_cur_chan.isEpgLoading())
 		{
+			_epg_prog.setVisibility(View.VISIBLE);
+			
 			ArrayList<EPGData> el= _cur_chan.getAllEpgData();
 			if (el.size()>0)
 			{
@@ -211,6 +218,7 @@ public class EpgViewCtl implements OnItemSelectedListener , OnListBoundReached,M
 
 	@Override
 	public void onEPGUploaded(Channel ch) {
+		_epg_prog.setVisibility(View.INVISIBLE);
 		refreshList(ch);
 	}
 

@@ -1,5 +1,7 @@
 package com.example.test2;
 
+import android.view.animation.Animation;
+
 public interface ViewManager {
 	public enum AppViewState {INTERFACE,EPG,VIDEO;
 	 public AppViewState getNext() {
@@ -13,8 +15,8 @@ public interface ViewManager {
 	         : VIDEO;
 	   }
 	}
-	public void onViewInterface(AppViewState from);
-	public void onViewEpg(AppViewState from);
-	public void onViewVideo(AppViewState from);
+	public void onViewInterface(AppViewState from,Animation a);
+	public void onViewEpg(AppViewState from,Animation a);
+	public void onViewVideo(AppViewState from,Animation a);
 	
 }

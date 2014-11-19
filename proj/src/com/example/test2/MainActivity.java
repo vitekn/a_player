@@ -23,6 +23,9 @@ import android.view.Window;
 //import android.view.ViewGroup.LayoutParams;
 //import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
@@ -49,6 +52,9 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 	 private OnSwipeTouchListener _swipe_detector;
 	 private SeekBar _player_pb;
 	 private Timer _hide_tm=new Timer();
+	 private Animation _leftout_anim;
+	 private Animation _rightout_anim;
+	 private Animation _fadein_anim;
 	 boolean _data_ok=false;
 	 boolean _select_topic=true;
 	 VlcPlayer vv;
@@ -58,6 +64,26 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 	 int _first_vis_ch=-1;
 //	 Spinner _t_sp;
 	 TopicClick _top_click;
+	 
+	 class AnimationChain implements AnimationListener{
+		 private int _id_to_show;
+		 private int _id_to_hide;
+		 AnimationChain(int id_to_hide,int id_to_show){_id_to_show=id_to_show; _id_to_hide=id_to_hide;}
+		@Override
+		public void onAnimationEnd(Animation animation) {
+			if (_id_to_hide!=0)
+				findViewById(_id_to_hide).setVisibility(View.GONE);
+			if (_id_to_show!=0 && (_id_to_show!=R.id.player_ctl_l || vv.isSeekable()))
+			{
+				findViewById(_id_to_show).setVisibility(View.VISIBLE);
+				findViewById(_id_to_show).startAnimation(_fadein_anim);
+			}
+		}
+		@Override
+		public void onAnimationRepeat(Animation animation) {}
+		@Override
+		public void onAnimationStart(Animation animation) {}
+	 }
 	 
 	 class TopicClick implements OnClickListener
 	 {
@@ -122,7 +148,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 		 
 		 boolean sw=_swipe_detector.onTouch(null, ev);
 		 
-		 return super.dispatchTouchEvent(ev) || sw;
+		 return sw || super.dispatchTouchEvent(ev) ;
 		 
 	 }
 	 
@@ -136,14 +162,17 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 		_swipe_detector=new OnSwipeTouchListener(this){
 			@Override
 			public void onSwipeLeft() {
-				app.setNextView();
+				app.setNextView(_leftout_anim);
 			}
 			@Override
 			public void onSwipeRight() {
-				app.setPrevView();
+				app.setPrevView(_rightout_anim);
 				
 			}
 		};
+		_leftout_anim=AnimationUtils.loadAnimation(getApplicationContext(), R.animator.leftout_anim);
+		_rightout_anim=AnimationUtils.loadAnimation(getApplicationContext(), R.animator.rightout_anim);
+		_fadein_anim=AnimationUtils.loadAnimation(getApplicationContext(), R.animator.fadein_anim);
 		
 		app= (VideoApp)this.getApplication();
 		app.setViewManager(this);
@@ -195,14 +224,14 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 		Log.d("MAINACT","1");
 		ListView elv=(ListView)findViewById(R.id.epg_listView);
 		Log.d("MAINACT","2");
-		hideView(AppViewState.EPG);
-		hideView(AppViewState.VIDEO);
+		hideView(AppViewState.EPG,null);
+		hideView(AppViewState.VIDEO,null);
 		Log.d("MAINACT","4");
 		sv.setOnTouchListener(new SurfaceView.OnTouchListener(){
 			@Override
 			public boolean onTouch(View arg0, MotionEvent arg1) {
 				if (app.getViewState()==AppViewState.VIDEO)
-					onViewVideo(AppViewState.VIDEO);
+					onViewVideo(AppViewState.VIDEO,null);
 				return false;
 			}}); 
 
@@ -246,7 +275,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 			initData();
 			Spinner esp=(Spinner)findViewById(R.id.epg_spinner);
 			Log.d("MAINACT","5");
-			_epg_vc=new EpgViewCtl(app,this,esp,elv);
+			_epg_vc=new EpgViewCtl(app,this,esp,elv,(ProgressBar)findViewById(R.id.progressEpgLoading));
 			Log.d("MAINACT","6");
 		}
 	}
@@ -333,6 +362,12 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 		
 	}
 	@Override
+	protected void onDestroy(){
+		_player_pb.setOnSeekBarChangeListener(null);
+		super.onDestroy();
+	}
+	
+	@Override
 	protected void onResume()
 	{
 		Log.d("MAINACT","onresume ");
@@ -361,7 +396,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 			//vv.release();
 		//	SurfaceView sv= (SurfaceView) findViewById(R.id.videoView1);
 //			vv=new VlcPlayer(sv,this);
-			hideView(AppViewState.VIDEO);
+			hideView(AppViewState.VIDEO,null);
 			vv.setVideoURI(Uri.parse(cch.getMrl()));
 			vv.start();
 			
@@ -551,55 +586,92 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 		
 		
 	}
+	
 	public void toggleInterface(View v)
 	{
-		app.setViewState(AppViewState.VIDEO);
+		app.setViewState(AppViewState.VIDEO,null);
 	}
 	public void toggleEpg(View v)
 	{
 //		Intent ni=new Intent(v.getContext(),EpgActivity.class);
 	//	startActivity(ni);
-		app.setViewState(AppViewState.EPG);
+		app.setViewState(AppViewState.EPG,null);
 		return;
 		
 	}
-	public void hideView(AppViewState v)
+	
+	private View getView(AppViewState v)
 	{
+		View view=null;
 		switch (v)
 		{
 			case INTERFACE:
-				findViewById(R.id.interface_l).setVisibility(View.INVISIBLE);
+				view=findViewById(R.id.interface_l);
 			break;
 			case EPG:
-				findViewById(R.id.epg_l).setVisibility(View.INVISIBLE);
+				view=findViewById(R.id.epg_l);
 			break;
 			case VIDEO:
-				try{
-				_hide_tm.cancel();
-				_hide_tm.purge();
-				}catch(Exception e){}
-				findViewById(R.id.player_ctl_l).setVisibility(View.INVISIBLE);
-				
+				view=findViewById(R.id.player_ctl_l);
+			break;
+		}
+		return view;
+		
+	}	
+	public void hideView(AppViewState v,Animation a)
+	{
+		if (v==AppViewState.VIDEO)
+		{
+			try{
+			_hide_tm.cancel();
+			_hide_tm.purge();
+			}catch(Exception e){}
+		}
+		View view=getView(v);
+	
+		if (view!=null)
+		{
+			if (a!=null)
+				view.startAnimation(a);
+			else
+				view.setVisibility(View.GONE);
 		}
 			
 	}
 	
+	private boolean animateTransaction(int id,AppViewState from,Animation a)
+	{
+		if(a!=null)
+		{
+			View view=getView(from);
+			if (from==AppViewState.VIDEO)
+				view.setVisibility(View.VISIBLE);
+			a.setAnimationListener(new AnimationChain(getView(from).getId(),id));
+		}
+		hideView(from,a);
+		
+		return a!=null;
+		
+	}
+	
 	@Override
-	public void onViewInterface(AppViewState from) {
-		hideView(from);
-		findViewById(R.id.interface_l).setVisibility(View.VISIBLE);
+	public void onViewInterface(AppViewState from,Animation a) {
+
+		if (!animateTransaction(R.id.interface_l,from,a))
+			findViewById(R.id.interface_l).setVisibility(View.VISIBLE);
 	}
 
 	@Override
-	public void onViewEpg(AppViewState from) {
-		hideView(from);
-		findViewById(R.id.epg_l).setVisibility(View.VISIBLE);
+	public void onViewEpg(AppViewState from,Animation a) {
+		if (!animateTransaction(R.id.epg_l,from,a))
+			findViewById(R.id.epg_l).setVisibility(View.VISIBLE);
 		
 	}
 
 	@Override
-	public void onViewVideo(AppViewState from) {
-		hideView(from);
+	public void onViewVideo(AppViewState from,Animation a) {
+		boolean animated=animateTransaction(R.id.player_ctl_l,from,a);
+			
 		if (vv.isSeekable())
 		{
 			final Handler hnd=new Handler();
@@ -608,11 +680,13 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 				@Override
 				public void run() {
 					hnd.post(new Runnable(){
-						public void run(){hideView(AppViewState.VIDEO);}
+						public void run(){hideView(AppViewState.VIDEO,null);}
 					});
 				}
 			}, 5000);
-			findViewById(R.id.player_ctl_l).setVisibility(View.VISIBLE);
+			if (!animated)
+				findViewById(R.id.player_ctl_l).setVisibility(View.VISIBLE);
+
 		}
 	}
 	
