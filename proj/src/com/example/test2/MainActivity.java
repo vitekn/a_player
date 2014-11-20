@@ -663,6 +663,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 
 	@Override
 	public void onViewEpg(AppViewState from,Animation a) {
+		_epg_vc.syncChannel();
 		if (!animateTransaction(R.id.epg_l,from,a))
 			findViewById(R.id.epg_l).setVisibility(View.VISIBLE);
 		

@@ -59,6 +59,17 @@ public class EpgViewCtl implements OnItemSelectedListener , OnListBoundReached,M
 		
 		ChannelsConfig.Topic t=_app.getAppConfig().getChannelsConfig().getTopics().get(0);
 		_all_ch=t.getChannels();
+		syncChannel();
+		
+		Log.d("epg","la2");
+		_list_adapter = new EpgListAdapter(ctx, R.layout.epg_list_item, new ArrayList<EPGData>(),this);
+		Log.d("epg","la2 ok");
+		
+		_epg_l.setAdapter(_list_adapter);		
+		
+	}
+
+	public void syncChannel() {
 		int i=0;
 		int si=0;
 		String ccn=_app.getAppConfig().getCurChannel().getName();
@@ -71,13 +82,6 @@ public class EpgViewCtl implements OnItemSelectedListener , OnListBoundReached,M
 		}
 		_sp.setOnItemSelectedListener(this);
 		_sp.setSelection(si);
-		
-		Log.d("epg","la2");
-		_list_adapter = new EpgListAdapter(ctx, R.layout.epg_list_item, new ArrayList<EPGData>(),this);
-		Log.d("epg","la2 ok");
-		
-		_epg_l.setAdapter(_list_adapter);		
-		
 	}
 	
 	public void selectEpgListItem(Date at){

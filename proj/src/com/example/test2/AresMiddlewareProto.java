@@ -135,7 +135,10 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 	
 	@Override
 	public void onHttpRequestComplete(byte[] res,int rid) {
-		String result=new String(res);
+		
+		String result="";
+		if (res!=null ) result=new String(res);
+		
 		//result=new Scanner(result).useDelimiter("\\A").next();
 		ReqRespPair rrp=findRRP(rid);
 		if (rrp!=null)
