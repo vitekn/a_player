@@ -76,12 +76,12 @@ public class ChannelsConfig {
 		public void epgLoading(){_epg_loading=true;}
 		public void epgUploaded(){_epg_loading=false;}
 		public boolean playsArchive(){return _pl_arch;}
-		public int getPosition(){
+		public int getPosition(VlcPlayer pl){
 			
 			if (_pl_arch)
 				return -1;
 			Date now=new Date();
-			long p=now.getTime()-_tshift;
+			long p=now.getTime()-_tshift-pl.getPauseTime();
 			if (p>=_ts_pend || _ts_pstart==0)
 			{
 				EPGData ed=getCurrentEpgData();
@@ -93,7 +93,9 @@ public class ChannelsConfig {
 				
 			}
 			if (_ts_pend!=_ts_pstart)
-			_position=(int)(((p-_ts_pstart)*1000/(_ts_pend-_ts_pstart)));
+			{
+				_position=(int)(((p-_ts_pstart)*1000/(_ts_pend-_ts_pstart)));
+			}
 			return _position;
 			}
 		public void setPosition(VlcPlayer p, int pos)
@@ -111,7 +113,7 @@ public class ChannelsConfig {
 					if (pos<rp)
 					{
 //						_position=pos;
-						now.setTime(now.getTime()-((_ts_pend-_ts_pstart)*pos/1000));
+						now.setTime(_ts_pstart+((_ts_pend-_ts_pstart)*pos/1000));
 						startPlay(p,now);
 					}
 				}

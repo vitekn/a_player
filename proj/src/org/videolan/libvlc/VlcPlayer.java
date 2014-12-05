@@ -1,6 +1,7 @@
 package org.videolan.libvlc;
 
 import java.lang.ref.WeakReference;
+import java.util.Date;
 
 import org.videolan.libvlc.EventHandler;
 import org.videolan.libvlc.IVideoPlayer;
@@ -37,6 +38,8 @@ public class VlcPlayer implements SurfaceHolder.Callback,IVideoPlayer {
 	private Activity _act;
 	private final static int VideoSizeChanged = -1;
 	private static PlayerEventsListener _pl_events=null;
+	private Date _pause_time=null;
+	private long _pause_duration=0;
 	
 	public void setPlayerEventsListener(PlayerEventsListener pl_events){_pl_events=pl_events;}
 	public VlcPlayer(SurfaceView sv,Activity act)
@@ -146,24 +149,13 @@ public class VlcPlayer implements SurfaceHolder.Callback,IVideoPlayer {
         String media=um.toString();
         Log.d("VLCPLAYER","svu "+media);
         _is_paused=false;
+		_pause_time=null;
+		_pause_duration=0;
+        
         try {
-/*            if (media.length() > 0) {
-                Toast toast = Toast.makeText(this, media, Toast.LENGTH_LONG);
-                toast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0,
-                        0);
-                toast.show();
-            }*/
-
-            // Create a new media player
         		stop();
-        		//  MediaList list = _libvlc.getMediaList();
-  //          Log.d("VLCPLAYER","svu mlc");
-    //        list.clear();
-      //      Log.d("VLCPLAYER","svu addm");
-        //    list.add(new Media(_libvlc, media), false);
-//            _libvlc.playIndex(0);
-            
             	_libvlc.playMRL(media);
+            	
         } catch (Exception e) {
             //Toast.makeText(this, "Error creating player!", Toast.LENGTH_LONG).show();
         }
@@ -171,6 +163,8 @@ public class VlcPlayer implements SurfaceHolder.Callback,IVideoPlayer {
     }
     public void setPosition(float pos)
     {
+		_pause_time=null;
+		_pause_duration=0;
     	_libvlc.setPosition(pos);
     }
     public float getPosition(){
@@ -181,18 +175,38 @@ public class VlcPlayer implements SurfaceHolder.Callback,IVideoPlayer {
     }
     public boolean isSeekable()
     {
-    	return _libvlc.isSeekable();
+    	if (_libvlc!=null)
+    		return _libvlc.isSeekable();
+    	else
+    		return false;
     }
+    public long getPauseTime(){
+    	long add=0;
+    	if (_pause_time!=null)
+			add=((new Date()).getTime()-_pause_time.getTime());
+    		
+    	return _pause_duration+add;
+    	}
     public void togglePause()
     {
     	_is_paused= !_is_paused;    	
     	if (_is_paused)
+    	{
+    		_pause_time=new Date();
     		_libvlc.pause();
+    	}
     	else
+    	{
+    		if (_pause_time!=null)
+    			_pause_duration+=((new Date()).getTime()-_pause_time.getTime());
+    		_pause_time=null;
     		_libvlc.play();
+    	}
     }
     public void stop()
     {
+		_pause_time=null;
+		_pause_duration=0;
         if (_libvlc.isPlaying())
         	_libvlc.stop();
     }

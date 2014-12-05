@@ -294,7 +294,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 									_player_pb.setProgress((int)(vv.getPosition()*1000));
 								else
 								{ 	
-									int pos=ch.getPosition();
+									int pos=ch.getPosition(vv);
 									if (pos>=0)
 										_player_pb.setProgress(pos);
 								}
