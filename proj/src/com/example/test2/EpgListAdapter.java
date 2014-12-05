@@ -39,7 +39,7 @@ public class EpgListAdapter extends ArrayAdapter<EPGData> {
 			EPGData ei=_items.get(position);
 			TextView tv=(TextView)row.findViewById(R.id.prog_start);
 			tv.setText(ei.getStartDayTime());
-			if (!ei.getUrl().isEmpty())
+			if (ei.isTimeShift())
 				tv.setTextColor(0xFFC0FFC0);
 			else
 				if (ei.getStart().before(new Date()))

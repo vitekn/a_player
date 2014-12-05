@@ -7,7 +7,7 @@ public class EPGData {
 	private Date _start;
 	private Date _stop;
 	private String _title;
-	private String _url="";
+	private boolean _time_sh=false;
 	
 	public EPGData (Date start,Date stop,String title){_start=start;_stop=stop;_title=title;}
 	public String getTitle(){return _title;}
@@ -29,10 +29,10 @@ public class EPGData {
 	}
 	public Date getStop(){return _stop;}
 	public Date getStart(){return _start;}
-	public String getUrl() {
-		return _url;
+	public boolean isTimeShift() {
+		return _time_sh;
 	}
-	public void setUrl(String _url) {
-		this._url = _url;
+	public void setTimeShift(boolean v) {
+		_time_sh=v;
 	}
 }

@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 
+import org.videolan.libvlc.VlcPlayer;
+
+import android.net.Uri;
 import android.util.Log;
 
 
@@ -57,6 +60,11 @@ public class ChannelsConfig {
 		private String _timeshift_url;
 		private int _timeshift_duration;
 		private boolean _epg_loading=false;
+		private boolean _pl_arch=false;
+		private int _position=0;
+		private long _ts_pstart=0;
+		private long _ts_pend=0;
+		private long _tshift=0;
 		
 		public Channel(String name,String mrl,String icon_url,int id,String tm_url,int tm_dur){
 			super(name,icon_url,id);
@@ -67,12 +75,109 @@ public class ChannelsConfig {
 		public boolean isEpgLoading(){return _epg_loading;}
 		public void epgLoading(){_epg_loading=true;}
 		public void epgUploaded(){_epg_loading=false;}
+		public boolean playsArchive(){return _pl_arch;}
+		public int getPosition(){
+			
+			if (_pl_arch)
+				return -1;
+			Date now=new Date();
+			long p=now.getTime()-_tshift;
+			if (p>=_ts_pend || _ts_pstart==0)
+			{
+				EPGData ed=getCurrentEpgData();
+				if (ed!=null)
+				{
+					_ts_pstart=ed.getStart().getTime();
+					_ts_pend=ed.getStop().getTime();
+				}
+				
+			}
+			if (_ts_pend!=_ts_pstart)
+			_position=(int)(((p-_ts_pstart)*1000/(_ts_pend-_ts_pstart)));
+			return _position;
+			}
+		public void setPosition(VlcPlayer p, int pos)
+		{//set position here!
+			if (p.isSeekable() && _pl_arch)
+			{
+				p.setPosition(((float)pos)/1000);
+			}
+			else
+			{
+				if (_ts_pstart!=0 && _ts_pstart!=_ts_pend)
+				{
+					Date now=new Date();
+					int rp=(int)((now.getTime()-_ts_pstart)*1000/(_ts_pend-_ts_pstart));
+					if (pos<rp)
+					{
+//						_position=pos;
+						now.setTime(now.getTime()-((_ts_pend-_ts_pstart)*pos/1000));
+						startPlay(p,now);
+					}
+				}
+			}
+		};
+		
+		public boolean startPlay(VlcPlayer p,Date start){
+			Date now=new Date();
+			String u="";
+			_pl_arch=false;
+			_ts_pstart=0;
+			_ts_pend=0;
+			_tshift=0;
+			_position=0;
+			if ((start.getTime()+10000)>=now.getTime())
+			{///use live
+				u=getMrl();
+			}
+			else
+			if (!_epg.isEmpty() && _timeshift_duration>0)
+			{
+				int i=getEpgIndexIn(start);
+				if (i!=_epg.size())
+				{
+					EPGData ed=_epg.get(i);
+					if (ed.getStop().after(new Date()))
+					{///use timeshift
+						_ts_pstart=ed.getStart().getTime();
+						_ts_pend=ed.getStop().getTime();
+						if (_ts_pend!=_ts_pstart)
+							_position=(int)((start.getTime()-ed.getStart().getTime())*1000/(_ts_pend-_ts_pstart));
+						else
+							_position=0;
+						u=getTimeShiftUrlForProgramm((now.getTime()-start.getTime())/1000);
+
+						_tshift=now.getTime()-start.getTime();
+						
+					}
+					else
+					{///use archive
+						_pl_arch=true;
+						u=getArchiveUrlForProgramm(ed);
+					}
+				
+				}
+				else
+					return false;
+			}
+			if (!u.isEmpty())
+			{
+				p.setVideoURI(Uri.parse(u));
+				p.start();
+			}
+			
+			return !u.isEmpty();
+		}
 		
 		public String getMrl(){
 			Log.d("CHANNEL","getMrl");
 			return _mrl;}
 		
-		public String getTimeShiftUrlForProgramm(EPGData epg)
+		private String getTimeShiftUrlForProgramm(long secs_ago)
+		{
+			return _timeshift_url+"/timeshift_rel-"+secs_ago+".m3u8";
+		}
+		private String getArchiveUrlForProgramm(EPGData epg)
 		{
 			String url="";
 			Date now=new Date();
@@ -104,7 +209,8 @@ public class ChannelsConfig {
 			} while (i<_epg.size());
 
 //			Log.d("CHANNEL","add epg "+ epg.getTitle() +" t "+epg.getStartTime()+" at "+i);
-			epg.setUrl(getTimeShiftUrlForProgramm(epg));
+		//	epg.setUrl(getTimeShiftUrlForProgramm(epg));
+			epg.setTimeShift(!getArchiveUrlForProgramm(epg).isEmpty());
 			_epg.add(i,epg);
 			_epg_present=true;
 			
@@ -116,6 +222,17 @@ public class ChannelsConfig {
 			{
 				EPGData ed=_epg.get(i);
 				if (ed.getStop().getTime()>=d.getTime())
+					break;
+			}
+			return i;
+		}
+		private int getEpgIndexIn(Date d)
+		{
+			int i=0;
+			for (;i<_epg.size();++i)
+			{
+				EPGData ed=_epg.get(i);
+				if (ed.getStart().getTime()<=d.getTime() && d.getTime()<ed.getStop().getTime())
 					break;
 			}
 			return i;

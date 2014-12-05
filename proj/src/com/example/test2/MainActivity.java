@@ -202,25 +202,27 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 
 			@Override
 			public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {
-				vv.setPosition(((float)arg1)/1000);
+				if (arg2)
+					app.getAppConfig().getCurChannel().setPosition(vv, arg1);
 			}
 			@Override
 			public void onStartTrackingTouch(SeekBar arg0) {}
 			@Override
-			public void onStopTrackingTouch(SeekBar arg0) {}
+			public void onStopTrackingTouch(SeekBar arg0) {
+			}
 			
 		});
 		SurfaceView sv= (SurfaceView) findViewById(R.id.videoView1);
 		vv=new VlcPlayer(sv,this);
 		app.setVideoPlayer(vv);
-		vv.setPlayerEventsListener(new VlcPlayer.PlayerEventsListener(){
+/*		vv.setPlayerEventsListener(new VlcPlayer.PlayerEventsListener(){
 			@Override
 			public void onPositionChanged() {
 				int pos=(int)(vv.getPosition()*1000);
 				if (pos>=0)
 					_player_pb.setProgress(pos);
 			}
-		});
+		});*/
 		Log.d("MAINACT","1");
 		ListView elv=(ListView)findViewById(R.id.epg_listView);
 		Log.d("MAINACT","2");
@@ -277,6 +279,31 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 			Log.d("MAINACT","5");
 			_epg_vc=new EpgViewCtl(app,this,esp,elv,(ProgressBar)findViewById(R.id.progressEpgLoading));
 			Log.d("MAINACT","6");
+
+			final Handler hnd=new Handler();
+			_hide_tm=new Timer();
+			_hide_tm.schedule(new TimerTask(){
+				@Override
+				public void run() {
+					hnd.post(new Runnable(){
+						public void run(){
+							ChannelsConfig.Channel ch= app.getAppConfig().getCurChannel();
+							if (ch!=null)
+							{
+								if (vv.isSeekable() && ch.playsArchive())
+									_player_pb.setProgress((int)(vv.getPosition()*1000));
+								else
+								{ 	
+									int pos=ch.getPosition();
+									if (pos>=0)
+										_player_pb.setProgress(pos);
+								}
+							}
+						}
+					});
+				}
+			}, 1000,1000);
+			
 		}
 	}
 
@@ -376,10 +403,11 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 		{
 			Log.d("MAINACT","onresume initData");
 			initData();
-			String v=app.getAppConfig().getCurChannel().getMrl();//"http://192.168.101.29/hls/TNT/TNT.m3u8");
-			Log.d("MAINACT","initData "+v);
-			vv.setVideoURI(Uri.parse(v));
-			vv.start();
+			app.getAppConfig().getCurChannel().startPlay(vv,new Date());
+		//	String v=app.getAppConfig().getCurChannel().getMrl();//"http://192.168.101.29/hls/TNT/TNT.m3u8");
+			//Log.d("MAINACT","initData "+v);
+//			vv.setVideoURI(Uri.parse(v));
+	//		vv.start();
 		}
 		Log.d("MAINACT","onresume ok");
 	}
@@ -397,8 +425,9 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 		//	SurfaceView sv= (SurfaceView) findViewById(R.id.videoView1);
 //			vv=new VlcPlayer(sv,this);
 			hideView(AppViewState.VIDEO,null);
-			vv.setVideoURI(Uri.parse(cch.getMrl()));
-			vv.start();
+			cch.startPlay(vv, new Date());
+//			vv.setVideoURI(Uri.parse(cch.getMrl()));
+	//		vv.start();
 			
 			//vv.setVideoURI(Uri.parse("http://192.168.101.29/hls/TNT/TNT.m3u8"));
 //			app.setCurrentMedia(ch.getName());
@@ -673,8 +702,8 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 	public void onViewVideo(AppViewState from,Animation a) {
 		boolean animated=animateTransaction(R.id.player_ctl_l,from,a);
 			
-		if (vv.isSeekable())
-		{
+		//if (vv.isSeekable())
+		//{
 			final Handler hnd=new Handler();
 			_hide_tm=new Timer();
 			_hide_tm.schedule(new TimerTask(){
@@ -688,7 +717,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 			if (!animated)
 				findViewById(R.id.player_ctl_l).setVisibility(View.VISIBLE);
 
-		}
+		//}
 	}
 	
 }

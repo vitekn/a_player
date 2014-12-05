@@ -35,12 +35,7 @@ public class EpgViewCtl implements OnItemSelectedListener , OnListBoundReached,M
 			EPGData epg=(EPGData)arg1.getTag();
 			if (_cur_chan!=null)
 			{
-				String ts=_cur_chan.getTimeShiftUrlForProgramm(epg);
-				if (!ts.isEmpty())
-				{
-					_app.getVideoPlayer().setVideoURI(Uri.parse(ts));
-					_app.getVideoPlayer().start();
-				}
+				_cur_chan.startPlay(_app.getVideoPlayer(), epg.getStart());
 			}
 		}
 	 }
