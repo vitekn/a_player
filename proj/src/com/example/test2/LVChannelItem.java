@@ -57,7 +57,13 @@ public class LVChannelItem extends LVComItem implements MiddlewareProto.ProtoEve
 		{
 			v = inf.inflate(_layoutResourceId, parent, false);
 		}
-		
+		View bgv=v.findViewById(R.id.channel_list_item);
+		if (_app.getAppConfig().getCurChannel()==_my_channel)
+			bgv.setBackgroundResource(R.drawable.button_hl_grad);
+		else
+			bgv.setBackgroundResource(R.drawable.button_nhl_grad);
+		bgv.setOnClickListener(_cl_l);
+		bgv.setTag(this);
 		uploadIcon(_my_channel);
 		EPGData ed=_my_channel.getCurrentEpgData();
 		TextView epg=(TextView)v.findViewById(R.id.channel_epg);

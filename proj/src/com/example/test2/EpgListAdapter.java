@@ -34,16 +34,28 @@ public class EpgListAdapter extends ArrayAdapter<EPGData> {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 			View row = convertView;
-			LayoutInflater inflater = ((Activity) _context).getLayoutInflater();
-			row = inflater.inflate(_layoutResourceId, parent, false);
+			if (row==null)
+			{
+				LayoutInflater inflater = ((Activity) _context).getLayoutInflater();
+				row = inflater.inflate(_layoutResourceId, parent, false);
+			}
 			EPGData ei=_items.get(position);
 			TextView tv=(TextView)row.findViewById(R.id.prog_start);
 			tv.setText(ei.getStartDayTime());
-			if (ei.isTimeShift())
-				tv.setTextColor(0xFFC0FFC0);
+			View bgv=row.findViewById(R.id.epg_list_iteml);
+			Date now=new Date();
+			if (ei.isAtTime(now))
+				bgv.setBackgroundResource(R.drawable.button_hl_grad);
 			else
+			if (ei.isTimeShift())
+				bgv.setBackgroundResource(R.drawable.epg_list_tshift_hl);
+//				tv.setTextColor(0xFFC0FFC0);
+			else
+			{
+				bgv.setBackgroundColor(0);
 				if (ei.getStart().before(new Date()))
 					tv.setTextColor(0xFFD0D0D0);
+			}
 			tv.setTag(ei);
 				
 			tv=(TextView)row.findViewById(R.id.prog_title);

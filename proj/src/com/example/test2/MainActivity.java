@@ -420,21 +420,12 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 			ChannelsConfig.Channel cch=((LVChannelItem)ci).getChannel();
 			app.getAppConfig().setCurChannel(cch);
 			setCurrentChannelName();
-			//vv.stopPlayback();
-			//vv.release();
-		//	SurfaceView sv= (SurfaceView) findViewById(R.id.videoView1);
-//			vv=new VlcPlayer(sv,this);
 			hideView(AppViewState.VIDEO,null);
 			cch.startPlay(vv, new Date());
-//			vv.setVideoURI(Uri.parse(cch.getMrl()));
-	//		vv.start();
-			
-			//vv.setVideoURI(Uri.parse("http://192.168.101.29/hls/TNT/TNT.m3u8"));
-//			app.setCurrentMedia(ch.getName());
-			//app.setCurrentMedia("http://192.168.101.29/hls/TNT/TNT.m3u8");
-		//	refreshEPGDisplay(cch);
+			adapter.notifyDataSetChanged();
 		}	
 	}
+
 	/*
 	public void refreshEPGDisplay(ChannelsConfig.Channel ch){
 		Log.d("MAINACT","refreshEPGDisplay");

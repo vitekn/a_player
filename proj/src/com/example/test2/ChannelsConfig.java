@@ -234,8 +234,10 @@ public class ChannelsConfig {
 			for (;i<_epg.size();++i)
 			{
 				EPGData ed=_epg.get(i);
-				if (ed.getStart().getTime()<=d.getTime() && d.getTime()<ed.getStop().getTime())
+				if (ed.isAtTime(d))
 					break;
+//				if (ed.getStart().getTime()<=d.getTime() && d.getTime()<ed.getStop().getTime())
+	//				break;
 			}
 			return i;
 		}

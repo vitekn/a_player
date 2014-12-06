@@ -35,4 +35,9 @@ public class EPGData {
 	public void setTimeShift(boolean v) {
 		_time_sh=v;
 	}
+	public boolean isAtTime(Date d)
+	{
+		return (getStart().getTime()<=d.getTime() && d.getTime()<getStop().getTime());
+
+	}
 }

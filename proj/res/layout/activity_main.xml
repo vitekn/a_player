@@ -33,7 +33,7 @@
         android:layout_marginTop="0dp"
         android:background="#80000000" >
 
-        <ImageButton
+        <!--   <ImageButton
             android:id="@+id/fullScreen"
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -49,7 +49,7 @@
             android:layout_toRightOf="@id/fullScreen"
             android:contentDescription="@string/app_name"
             android:onClick="toggleEpg" />
-        
+        -->
 
         <SearchView
             android:id="@+id/channelSearch"
@@ -70,11 +70,13 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:layout_toLeftOf="@id/channelSearch"
-            android:layout_toRightOf="@id/epgButton"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
             android:text=""
             android:textColor="#f0f0f0"
             android:textSize="30sp" />
+<!--             android:layout_toLeftOf="@id/channelSearch"
+            android:layout_toRightOf="@id/epgButton" -->
         
     </RelativeLayout>
         
