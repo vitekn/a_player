@@ -8,6 +8,9 @@ import java.util.TimerTask;
 import org.videolan.libvlc.VlcPlayer;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,6 +18,10 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
@@ -55,6 +62,8 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 	 private Animation _leftout_anim;
 	 private Animation _rightout_anim;
 	 private Animation _fadein_anim;
+	 private int _selected_profile=-1;
+	 private boolean _profile_pass_ok=false;
 	 boolean _data_ok=false;
 	 boolean _select_topic=true;
 	 VlcPlayer vv;
@@ -306,7 +315,111 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 			
 		}
 	}
+	
+	@Override 
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
+		MenuInflater mi=getMenuInflater();
+		mi.inflate(R.menu.main, menu);
+		return true;
+	}
 
+	public Activity getActivity(){return this;}
+
+	private void showCustomDialog(int title_id,int ok_id,int lid,DialogInterface.OnClickListener cl)
+	{
+		AlertDialog.Builder b2 = new AlertDialog.Builder(getActivity());
+		LayoutInflater li= getActivity().getLayoutInflater();
+		b2.setTitle(title_id)
+			.setView(li.inflate(lid,null))
+			.setNegativeButton(R.string.cancel_button_title, null)
+			.setPositiveButton(ok_id, cl);
+		b2.create().show();
+		
+	}
+	
+	public void createProfilePass(int title_id)
+	{
+		showCustomDialog(title_id,R.string.ok_button_title,R.layout.profile_create_pass,
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						AlertDialog ad=(AlertDialog)dialog;
+						EditText p=(EditText) ad.findViewById(R.id.profile_password);
+						EditText pa=(EditText) ad.findViewById(R.id.profile_password_again);
+						_profile_pass_ok=(p.getText().toString().compareTo(pa.getText().toString())==0);
+						if (_profile_pass_ok)
+						{
+							app.getAppConfig().getUserProfiles().setProfilePass(_selected_profile,p.getText().toString());
+							app.getAppService().saveProfiles();
+							changeProfile();
+						}
+						else
+							createProfilePass(R.string.profile_retry_pass_dialog_title);
+					}
+				});
+		
+	}
+	private void checkProfilePass()
+	{
+		showCustomDialog(R.string.profile_pass_dialog_title,R.string.ok_button_title,R.layout.profile_pass,
+			new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					AlertDialog ad=(AlertDialog)dialog;
+					TextView p=(TextView) ad.findViewById(R.id.profile_password);
+					_profile_pass_ok=app.getAppConfig().getUserProfiles().isPassCorrect(_selected_profile, p.getText().toString());
+					changeProfile();
+				}
+			});
+	}
+
+	private void changeProfile()
+	{
+		if (!_profile_pass_ok && app.getAppConfig().getUserProfiles().isPassNeeded(_selected_profile))
+		{
+			if (app.getAppConfig().getUserProfiles().passIsSet(_selected_profile))
+				checkProfilePass();
+			else
+				createProfilePass(R.string.profile_create_pass_dialog_title);
+				
+		}
+		else
+		{
+			app.getAppConfig().getUserProfiles().setCurrentProfile(_selected_profile);
+		}
+		
+	}
+	
+	@Override 
+	public boolean onOptionsItemSelected(MenuItem mi)
+	{
+		switch(mi.getItemId())
+		{
+			case R.id.item2:
+				_profile_pass_ok=false;
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				builder.setTitle(R.string.profile_dialog_title).setSingleChoiceItems(app.getAppConfig().getUserProfiles().getProfilesNames(),0,
+						new DialogInterface.OnClickListener(){
+							@Override
+							public void onClick(DialogInterface dialog,int which) {
+								_selected_profile=which;
+							}}
+						).setPositiveButton(R.string.select_button_title, new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								changeProfile();
+							}
+						}).setNegativeButton(R.string.close_button_title, null);
+				builder.create().show();
+
+				break;
+			default:
+				break;
+		}
+		return true;
+	}
+	
 	private boolean checkConfig()
 	{
 		if (app.getAppConfig().getChannelsConfig()==null)

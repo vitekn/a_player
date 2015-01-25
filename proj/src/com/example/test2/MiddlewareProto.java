@@ -11,9 +11,10 @@ public interface MiddlewareProto {
 		void onLogin(boolean r);
 		void onChannels(ChannelsConfig ch_conf);
 		void onEPGUploaded(ChannelsConfig.Channel ch);
+		void onProfilesLoaded(ProfilesData pd);
 	}
 	public interface ReqData{
-		public enum Request{NONE,AUTH,LOGIN,CHANNELS,EPG,TOPICS}
+		public enum Request{NONE,AUTH,LOGIN,CHANNELS,EPG,TOPICS,PROFILES}
 
 		Request getType();
 	}
@@ -27,9 +28,10 @@ public interface MiddlewareProto {
 		public int getId(){return _rrid;}
 	} 
 	public MiddlewareProto clone(); 
-	void authRequest(String id,String pin,String hw,MiddlewareProto.ProtoEvents clb);
-	void channelsRequest(String hw,MiddlewareProto.ProtoEvents clb);
+	public void authRequest(String id,String pin,String hw,MiddlewareProto.ProtoEvents clb);
+	public void channelsRequest(String hw,MiddlewareProto.ProtoEvents clb);
 	public void epgRequest(ChannelsConfig.Channel ch,Date from,Date to,MiddlewareProto.ProtoEvents clb);
+	public void profilesRequest(String hw,MiddlewareProto.ProtoEvents clb);
 	String getSSLSertName();
 //	ChannelsConfig getCannelsConfig();
 	Context getContext();

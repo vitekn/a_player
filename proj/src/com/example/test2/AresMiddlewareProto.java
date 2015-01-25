@@ -65,6 +65,23 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 		rrp.resp= (SendHttpRequest) new SendHttpRequest((MiddlewareProto)this,(OnHttpRequestComplete)this).execute("https://demo.iptvportal.ru/ca/",req,Integer.toString(rrp.getId()));
 
 	}
+	@Override
+	public void profilesRequest(String hw,MiddlewareProto.ProtoEvents clb)
+	{
+		_hw=hw;
+		Log.d("PROTO", "CR");
+		String req="{\"jsonrpc\":\"2.0\",\"id\":123,\"method\":\"get_profiles\""
+					+",\"params\"  : {"
+					+ "\"macaddr\": \""+hw+"\"}}";
+
+		Log.d("PROTO", req);
+		ReqRespPair rrp=new ReqRespPair();
+		_req_pairs.add(rrp);
+		rrp.req_data=new ReqDataProfiles();
+		rrp.clb=clb;
+		rrp.resp= (SendHttpRequest) new SendHttpRequest((MiddlewareProto)this,(OnHttpRequestComplete)this).execute("https://demo.iptvportal.ru/ca/",req,Integer.toString(rrp.getId()));
+		
+	}
 
 	private void playlistRequest(MiddlewareProto.ProtoEvents clb)
 	{
@@ -141,12 +158,38 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 		
 		//result=new Scanner(result).useDelimiter("\\A").next();
 		ReqRespPair rrp=findRRP(rid);
+		Log.d("PROTO","RESPONSE= "+result+" =END " +rrp );
 		if (rrp!=null)
 		{
 			MiddlewareProto.ProtoEvents pre=rrp.clb;
 			//Log.d("PROTO","RESP= "+result);
 			switch (rrp.req_data.getType())
 			{
+			case PROFILES:
+				
+				ProfilesData pd=new ProfilesData();
+				try{
+					JSONObject object = (JSONObject) new JSONTokener(result).nextValue();
+					JSONArray prfs = object.getJSONArray("result");
+					for (int i=0;i<prfs.length();++i)
+					{
+						JSONObject to=prfs.getJSONObject(i);
+						String pass=null;
+						try{pass=to.getString("password");}
+						catch(JSONException e){}
+						boolean rp=false;
+						try{rp=to.getBoolean("require_password");}
+						catch(JSONException e){}
+						pd.addProfile(to.getInt("id"),to.getString("name"),to.getString("title"), rp, to.getInt("age_limit"),pass);
+					}
+				}
+				catch(JSONException e)
+				{
+					Log.d("PROTO","profiles except");
+				}
+				pre.onProfilesLoaded(pd);
+				
+				break;
 			case AUTH:
 				try {
 					JSONObject object;
@@ -260,6 +303,7 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 				for (int j=0;j<ml.length();++j)
 				{
 					JSONObject ch=ml.getJSONObject(j);
+					Log.d("PROTO","CHANNEL= "+ch.toString());
 					if (ch.getInt("id")==ch_id)
 					{
 						String n=ch.getString("name");

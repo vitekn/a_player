@@ -1,6 +1,7 @@
 package com.example.test2;
 
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.videolan.libvlc.VlcPlayer;
@@ -40,8 +41,14 @@ public class VideoApp extends Application {
 		{
 			_config_loading=true;
 			_r_act=r_act;
-			String hw=getHW();
-			_prot.channelsRequest(hw,this);
+			_prot.channelsRequest(getHW(),this);
+		}
+		public void loadProfiles(Activity r_act)
+		{
+			_config_loading=true;
+			_r_act=r_act;
+			_prot.profilesRequest(getHW(),this);
+			
 		}
 		public void loadEPG(MiddlewareProto.ProtoEvents pre,ChannelsConfig.Channel ch){
 			if (pre==null)
@@ -71,6 +78,18 @@ public class VideoApp extends Application {
 			_r_act.recreate();
 		}
 		@Override
+		public void onProfilesLoaded(ProfilesData pd) {
+			
+			_logged_in=(pd.getProfile(0)!=null);
+			if (_logged_in)
+			{
+				getAppConfig().getUserProfiles().setProfiles(pd);
+			}
+			_config_loading=false;
+			_r_act.recreate();
+				
+		}
+		@Override
 		public void onChannels(ChannelsConfig ch_conf) {
 			Log.d("APPSERV","CC " + ch_conf);
 			if (ch_conf!=null && ch_conf.getTopics().size()>0)
@@ -80,25 +99,75 @@ public class VideoApp extends Application {
 				ac.setChannelsConfig(ch_conf);
 				ac.setCurTopic(ch_conf.getTopics().get(0));
 				ac.setCurChannel(ac.getCurTopic().getChannels().get(0));
-				_logged_in=true;
+				loadProfiles(_r_act);
+				//_logged_in=true;
+				
 			}
 			else
+			{
 				_logged_in=false;
-			_config_loading=false;
-			_r_act.recreate();
+				_config_loading=false;
+				_r_act.recreate();
+			}
 		}
 		@Override
 		public void onEPGUploaded(Channel ch) {
 			Log.d("APP","epg uploaded");
 		}
 		public boolean isConfigLoading(){return _config_loading;}
+		public void saveProfiles() {
+			
+		}
 	}
 	
 	class AppConfig {
+		class UserProfiles
+		{
+			private ProfilesData _pd=null;
+			private int _cur_prof=0;
+			public void setProfiles(ProfilesData pd)
+			{
+				_pd=pd;
+			}
+			public String[] getProfilesNames()
+			{
+				
+				String a[]=new String[_pd.getProfiles().size()];
+				int i=0;
+				for ( ProfilesData.Profile p: _pd.getProfiles())
+				{
+					a[i]=p.getTitle();
+					++i;
+				}
+				return a;
+			}
+			public boolean isPassNeeded(int pid)
+			{
+				return _pd.getProfile(pid).isPassReq();
+			}
+			public boolean isPassCorrect(int pid,String pass)
+			{
+				String p=_pd.getProfile(pid).getPassword();
+				if (p==null)
+					return false;
+				return pass.compareTo(p)==0;
+			}
+			public void setCurrentProfile(int pid)
+			{
+				_cur_prof=pid;
+			}
+			public boolean passIsSet(int selected_profile) {
+				
+				return _pd.getProfile(selected_profile).getPassword()!=null;
+			}
+			public void setProfilePass(int selected_profile,String pass) {
+				_pd.getProfile(selected_profile).setPassword(pass);
+			}
+		};
 		private ChannelsConfig _ch_conf=null;
 		private ChannelsConfig.Topic _cur_topic;
 		private ChannelsConfig.Channel _cur_channel;
-		
+		private UserProfiles _user_prof= new UserProfiles();
 		public ChannelsConfig getChannelsConfig() {
 			return _ch_conf;
 		}
@@ -107,6 +176,10 @@ public class VideoApp extends Application {
 		}
 		public ChannelsConfig.Topic getCurTopic() {
 			return _cur_topic;
+		}
+		public UserProfiles getUserProfiles()
+		{
+			return _user_prof;
 		}
 		public void setCurTopic(ChannelsConfig.Topic _cur_topic) {
 			this._cur_topic = _cur_topic;

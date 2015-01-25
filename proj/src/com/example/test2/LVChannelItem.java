@@ -118,5 +118,11 @@ public class LVChannelItem extends LVComItem implements MiddlewareProto.ProtoEve
 		
 	}
 
+	@Override
+	public void onProfilesLoaded(ProfilesData pd) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }

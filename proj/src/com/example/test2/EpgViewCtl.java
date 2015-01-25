@@ -221,5 +221,11 @@ public class EpgViewCtl implements OnItemSelectedListener , OnListBoundReached,M
 		refreshList(ch);
 	}
 
+	@Override
+	public void onProfilesLoaded(ProfilesData pd) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }
