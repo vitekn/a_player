@@ -47,6 +47,7 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 //import android.widget.VideoView;
 
 
@@ -283,6 +284,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 		}
 		if (checkConfig())
 		{
+			_selected_profile=app.getAppConfig().getUserProfiles().getCurrentProfileNum();
 			initData();
 			Spinner esp=(Spinner)findViewById(R.id.epg_spinner);
 			Log.d("MAINACT","5");
@@ -319,14 +321,18 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 	@Override 
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
-		MenuInflater mi=getMenuInflater();
-		mi.inflate(R.menu.main, menu);
-		return true;
+		if (app.getAppService().isLoggedIn())
+		{
+			MenuInflater mi=getMenuInflater();
+			mi.inflate(R.menu.main, menu);
+			return true;
+		}
+		return false;
 	}
 
 	public Activity getActivity(){return this;}
 
-	private void showCustomDialog(int title_id,int ok_id,int lid,DialogInterface.OnClickListener cl)
+	private AlertDialog createCustomDialog(int title_id,int ok_id,int lid,DialogInterface.OnClickListener cl)
 	{
 		AlertDialog.Builder b2 = new AlertDialog.Builder(getActivity());
 		LayoutInflater li= getActivity().getLayoutInflater();
@@ -334,13 +340,13 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 			.setView(li.inflate(lid,null))
 			.setNegativeButton(R.string.cancel_button_title, null)
 			.setPositiveButton(ok_id, cl);
-		b2.create().show();
+		return b2.create();
 		
 	}
 	
 	public void createProfilePass(int title_id)
 	{
-		showCustomDialog(title_id,R.string.ok_button_title,R.layout.profile_create_pass,
+		createCustomDialog(title_id,R.string.ok_button_title,R.layout.profile_create_pass,
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
@@ -351,18 +357,18 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 						if (_profile_pass_ok)
 						{
 							app.getAppConfig().getUserProfiles().setProfilePass(_selected_profile,p.getText().toString());
-							app.getAppService().saveProfiles();
+							app.getAppService().saveProfile(_selected_profile);
 							changeProfile();
 						}
 						else
 							createProfilePass(R.string.profile_retry_pass_dialog_title);
 					}
-				});
+				}).show();
 		
 	}
 	private void checkProfilePass()
 	{
-		showCustomDialog(R.string.profile_pass_dialog_title,R.string.ok_button_title,R.layout.profile_pass,
+		createCustomDialog(R.string.profile_pass_dialog_title,R.string.ok_button_title,R.layout.profile_pass,
 			new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
@@ -371,7 +377,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 					_profile_pass_ok=app.getAppConfig().getUserProfiles().isPassCorrect(_selected_profile, p.getText().toString());
 					changeProfile();
 				}
-			});
+			}).show();
 	}
 
 	private void changeProfile()
@@ -387,6 +393,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 		else
 		{
 			app.getAppConfig().getUserProfiles().setCurrentProfile(_selected_profile);
+			app.getAppService().saveTerminalSettings();
 		}
 		
 	}
@@ -399,7 +406,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 			case R.id.item2:
 				_profile_pass_ok=false;
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-				builder.setTitle(R.string.profile_dialog_title).setSingleChoiceItems(app.getAppConfig().getUserProfiles().getProfilesNames(),0,
+				builder.setTitle(R.string.profile_dialog_title).setSingleChoiceItems(app.getAppConfig().getUserProfiles().getProfilesNames(),app.getAppConfig().getUserProfiles().getCurrentProfileNum(),
 						new DialogInterface.OnClickListener(){
 							@Override
 							public void onClick(DialogInterface dialog,int which) {
@@ -414,6 +421,29 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 				builder.create().show();
 
 				break;
+			case R.id.item3:
+
+				AlertDialog ad=createCustomDialog(R.string.udp_proxy_dialog_title,R.string.ok_button_title,R.layout.terminal_settings,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								AlertDialog ad=(AlertDialog)dialog;
+								String p=((EditText) ad.findViewById(R.id.udp_proxy)).getText().toString();
+								boolean u=((ToggleButton) ad.findViewById(R.id.use_proxy)).isChecked();
+								if (p.compareTo(app.getAppConfig().getTerminalSettings().getUdpProxy())!=0 || u!=app.getAppConfig().getTerminalSettings().isUdpProxyUsed())
+								{
+									app.getAppConfig().getTerminalSettings().setUdpProxy(p);
+									app.getAppConfig().getTerminalSettings().setUdpProxyUsed(u);
+									app.getAppService().saveTerminalSettings();
+								}
+							}
+						});
+				ad.show();
+				((ToggleButton)ad.findViewById(R.id.use_proxy)).setChecked(app.getAppConfig().getTerminalSettings().isUdpProxyUsed());
+				((EditText)ad.findViewById(R.id.udp_proxy)).setText(app.getAppConfig().getTerminalSettings().getUdpProxy());
+				
+				
+				break;
 			default:
 				break;
 		}
@@ -425,7 +455,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 		if (app.getAppConfig().getChannelsConfig()==null)
 		{
 			if (!app.getAppService().isConfigLoading())
-				app.getAppService().loadConfig(this);
+				app.getAppService().loadTerminalSettings(this);
 			return false;
 		}
 		return true;
@@ -516,7 +546,10 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 		{
 			Log.d("MAINACT","onresume initData");
 			initData();
-			app.getAppConfig().getCurChannel().startPlay(vv,new Date());
+			app.getAppConfig().getCurChannel().startPlay(vv,
+														new Date(),
+														app.getAppConfig().getUserProfiles().getCurrentProfile(),
+														app.getAppConfig().getTerminalSettings());
 		//	String v=app.getAppConfig().getCurChannel().getMrl();//"http://192.168.101.29/hls/TNT/TNT.m3u8");
 			//Log.d("MAINACT","initData "+v);
 //			vv.setVideoURI(Uri.parse(v));
@@ -534,7 +567,8 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 			app.getAppConfig().setCurChannel(cch);
 			setCurrentChannelName();
 			hideView(AppViewState.VIDEO,null);
-			cch.startPlay(vv, new Date());
+			cch.startPlay(vv, new Date(),app.getAppConfig().getUserProfiles().getCurrentProfile(),
+															app.getAppConfig().getTerminalSettings());
 			adapter.notifyDataSetChanged();
 		}	
 	}

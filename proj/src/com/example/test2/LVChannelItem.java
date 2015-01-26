@@ -124,5 +124,17 @@ public class LVChannelItem extends LVComItem implements MiddlewareProto.ProtoEve
 		
 	}
 
+	@Override
+	public void onTerminalSettingsLoaded(TerminalSettings ts) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onSetRequest(boolean success) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }

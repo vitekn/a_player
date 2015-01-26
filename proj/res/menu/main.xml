@@ -10,13 +10,7 @@
  android:id="@+id/item3"
  android:icon="@android:drawable/ic_menu_call"
  android:showAsAction="always"
- android:title="Задать UPD-Proxy" >
-</item>
-        <item
- android:id="@+id/item4"
- android:icon="@android:drawable/ic_menu_call"
- android:showAsAction="always"
- android:title="Использовать UPD-Proxy" >
+ android:title="Настройки UDP-Proxy" >
 </item>
     
 </menu>

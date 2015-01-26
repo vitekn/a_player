@@ -9,12 +9,16 @@
     <string name="profile_pass_dialog_title">Введите пароль от профиля</string>
     <string name="profile_create_pass_dialog_title">Задайте пароль для профиля</string>
     <string name="profile_retry_pass_dialog_title">Пароли не совпадают, попробуйте еще раз</string>
-    
+    <string name="udp_proxy_dialog_title">Настройки UDP прокси</string>
     <string name="select_button_title">Выбрать</string>
     <string name="cancel_button_title">Отменить</string>
     <string name="close_button_title">Закрыть</string>
     <string name="ok_button_title">ОК</string>
     <string name="password">Пароль</string>
     <string name="password_again">Еще раз пароль</string>
+    <string name="udp_proxy">URL прокси</string>
+    <string name="udp_proxy_enable">Использовать прокси</string>
+    <string name="udp_proxy_enable_on">Прокси используется</string>
+    <string name="udp_proxy_enable_off">Прокси выключен</string>
     
 </resources>

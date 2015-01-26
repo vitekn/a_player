@@ -13,6 +13,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import com.example.test2.ProfilesData.Profile;
+
 import android.content.Context;
 import android.util.Log;
 
@@ -82,7 +84,59 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 		rrp.resp= (SendHttpRequest) new SendHttpRequest((MiddlewareProto)this,(OnHttpRequestComplete)this).execute("https://demo.iptvportal.ru/ca/",req,Integer.toString(rrp.getId()));
 		
 	}
+	@Override
+	public void updateProfile(String hw, Profile p, ProtoEvents clb) {
+		_hw=hw;
+		Log.d("PROTO", "CR");
+		String req="{\"jsonrpc\":\"2.0\",\"id\":123,\"method\":\"update_profile\""
+					+",\"params\"  : {"
+					+ "\"macaddr\": \""+hw+"\",\"profile_id\":"+p.getId()+",\"profile_password\":\""+p.getPassword()+"\"}}";
 
+		Log.d("PROTO", req);
+		ReqRespPair rrp=new ReqRespPair();
+		_req_pairs.add(rrp);
+		rrp.req_data=new ReqUpdateProfiles();
+		rrp.clb=clb;
+		rrp.resp= (SendHttpRequest) new SendHttpRequest((MiddlewareProto)this,(OnHttpRequestComplete)this).execute("https://demo.iptvportal.ru/ca/",req,Integer.toString(rrp.getId()));
+	}
+
+	@Override
+	public void terminalSettingsRequest(String hw,MiddlewareProto.ProtoEvents clb)
+	{
+		_hw=hw;
+		Log.d("PROTO", "CR");
+		String req="{\"jsonrpc\":\"2.0\",\"id\":123,\"method\":\"get_terminal_params\""
+					+",\"params\"  : {"
+					+ "\"macaddr\": \""+hw+"\"}}";
+
+		Log.d("PROTO", req);
+		ReqRespPair rrp=new ReqRespPair();
+		_req_pairs.add(rrp);
+		rrp.req_data=new ReqDataTParams();
+		rrp.clb=clb;
+		rrp.resp= (SendHttpRequest) new SendHttpRequest((MiddlewareProto)this,(OnHttpRequestComplete)this).execute("https://demo.iptvportal.ru/ca/",req,Integer.toString(rrp.getId()));
+		
+	}
+
+
+	@Override
+	public void setTerminalSettings(String hw, TerminalSettings ts,
+			ProtoEvents clb) {
+		_hw=hw;
+		Log.d("PROTO", "CR");
+		String req="{\"jsonrpc\":\"2.0\",\"id\":123,\"method\":\"set_terminal_params\""
+					+",\"params\"  : {"
+					+ "\"macaddr\": \""+hw+"\",\"profile_id\":"+ts.getCurrentProfileId()+",\"use_mcast_proxy\":\""+ts.isUdpProxyUsed()+"\",\"mcast_proxy_url\":\""+ts.getUdpProxy()+"\"}}";
+
+		Log.d("PROTO", req);
+		ReqRespPair rrp=new ReqRespPair();
+		_req_pairs.add(rrp);
+		rrp.req_data=new ReqUpdateProfiles();
+		rrp.clb=clb;
+		rrp.resp= (SendHttpRequest) new SendHttpRequest((MiddlewareProto)this,(OnHttpRequestComplete)this).execute("https://demo.iptvportal.ru/ca/",req,Integer.toString(rrp.getId()));
+		
+	}
+	
 	private void playlistRequest(MiddlewareProto.ProtoEvents clb)
 	{
 		Log.d("PROTO", "CR");
@@ -165,6 +219,33 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 			//Log.d("PROTO","RESP= "+result);
 			switch (rrp.req_data.getType())
 			{
+			case UPDATE_PROFILE:
+			case SET_TERMINAL:
+				pre.onSetRequest(true);
+				break;
+			case TERMINAL_PARAMS:
+				TerminalSettings ts=null;
+				try{
+					JSONObject object = (JSONObject) new JSONTokener(result).nextValue();
+					object = object.getJSONObject("result");
+					String udp_p="";
+					try{
+						udp_p=object.getString("mcast_proxy_url");
+						if (udp_p.compareTo("null")==0)
+							udp_p="";
+					}
+					catch(JSONException e){}
+					boolean use_p=false;
+					try{
+						use_p=object.getBoolean("use_mcast_proxy");
+					}
+					catch(JSONException e){}
+					ts=new TerminalSettings(udp_p,use_p,object.getInt("profile_id"));
+				}				
+				catch(JSONException e)
+				{}
+				pre.onTerminalSettingsLoaded(ts);
+				break;
 			case PROFILES:
 				
 				ProfilesData pd=new ProfilesData();
@@ -303,7 +384,7 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 				for (int j=0;j<ml.length();++j)
 				{
 					JSONObject ch=ml.getJSONObject(j);
-					Log.d("PROTO","CHANNEL= "+ch.toString());
+				//	Log.d("PROTO","CHANNEL= "+ch.toString());
 					if (ch.getInt("id")==ch_id)
 					{
 						String n=ch.getString("name");
@@ -315,8 +396,14 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 							tm_url=ch.getString("timeshift_url");
 							tm_dur=ch.getInt("timeshift_archive_length");
 						}catch(Exception e){}
+
+						int age_r=0;
+						try{
+							age_r=ch.getInt("age_rating");
+						}catch(Exception e){}
+						
 						int id=ch.getInt("channel_id");
-						t.addChannel(n,m,u,id,tm_url,tm_dur);
+						t.addChannel(n,m,u,id,tm_url,tm_dur,age_r);
 						break;
 					}
 				}
@@ -334,6 +421,7 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 
 		return _ssl_sert_name;
 	}
+
 	
 	
 	

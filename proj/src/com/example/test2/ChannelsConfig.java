@@ -65,12 +65,14 @@ public class ChannelsConfig {
 		private long _ts_pstart=0;
 		private long _ts_pend=0;
 		private long _tshift=0;
+		private int _age_rating=0;
 		
-		public Channel(String name,String mrl,String icon_url,int id,String tm_url,int tm_dur){
+		public Channel(String name,String mrl,String icon_url,int id,String tm_url,int tm_dur, int age_r){
 			super(name,icon_url,id);
 			_mrl=mrl;
 			_timeshift_url=tm_url;
 			_timeshift_duration=tm_dur;
+			_age_rating=age_r;
 		}
 		public boolean isEpgLoading(){return _epg_loading;}
 		public void epgLoading(){_epg_loading=true;}
@@ -114,13 +116,26 @@ public class ChannelsConfig {
 					{
 //						_position=pos;
 						now.setTime(_ts_pstart+((_ts_pend-_ts_pstart)*pos/1000));
-						startPlay(p,now);
+						startPlay(p,now,"");
 					}
 				}
 			}
 		};
 		
-		public boolean startPlay(VlcPlayer p,Date start){
+		public boolean startPlay(VlcPlayer p,Date start,ProfilesData.Profile up,TerminalSettings ts){
+			if (up.getAgeLimit()<_age_rating)
+				return false;
+			String pref="";
+			if (ts.isUdpProxyUsed())
+			{
+				pref=ts.getUdpProxy();
+				if (!pref.endsWith("/"))
+					pref=pref+"/";
+			}
+			
+			return startPlay(p,start,pref);
+		}
+		private boolean startPlay(VlcPlayer p,Date start,String prefix){
 			Date now=new Date();
 			String u="";
 			_pl_arch=false;
@@ -131,6 +146,8 @@ public class ChannelsConfig {
 			if ((start.getTime()+10000)>=now.getTime())
 			{///use live
 				u=getMrl();
+				if (u.startsWith("udp://"))
+					u=prefix+u;
 			}
 			else
 			if (!_epg.isEmpty() && _timeshift_duration>0)
@@ -294,9 +311,9 @@ public class ChannelsConfig {
 			super(name,icon_url,id);
 		}
 		public ArrayList<Channel> getChannels(){return _channels;}
-		public void addChannel(String name,String mrl,String icon_url,int id,String tm_url,int tm_dur)
+		public void addChannel(String name,String mrl,String icon_url,int id,String tm_url,int tm_dur, int age_r)
 		{
-			_channels.add(new Channel(name,mrl,icon_url,id,tm_url,tm_dur));
+			_channels.add(new Channel(name,mrl,icon_url,id,tm_url,tm_dur,age_r));
 		}
 	}
 	

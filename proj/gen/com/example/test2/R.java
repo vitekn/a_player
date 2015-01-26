@@ -1126,9 +1126,8 @@ containing a value of this type.
         public static final int ifRoom=0x7f06000a;
         public static final int image=0x7f060027;
         public static final int interface_l=0x7f060046;
-        public static final int item2=0x7f06005e;
-        public static final int item3=0x7f06005f;
-        public static final int item4=0x7f060060;
+        public static final int item2=0x7f060060;
+        public static final int item3=0x7f060061;
         public static final int listMode=0x7f060001;
         public static final int listView1=0x7f06003e;
         public static final int list_item=0x7f060029;
@@ -1172,10 +1171,12 @@ containing a value of this type.
         public static final int textView2=0x7f060041;
         public static final int title=0x7f06002b;
         public static final int top_action_bar=0x7f060020;
-        public static final int topicButton=0x7f06005d;
+        public static final int topicButton=0x7f06005f;
         public static final int topicList=0x7f06004a;
+        public static final int udp_proxy=0x7f06005d;
         public static final int up=0x7f060021;
         public static final int useLogo=0x7f060003;
+        public static final int use_proxy=0x7f06005e;
         public static final int videoView1=0x7f06003c;
         public static final int withText=0x7f06000c;
     }
@@ -1239,8 +1240,9 @@ containing a value of this type.
         public static final int profile_create_pass=0x7f03001f;
         public static final int profile_pass=0x7f030020;
         public static final int support_simple_spinner_dropdown_item=0x7f030021;
-        public static final int topic_item=0x7f030022;
-        public static final int topic_list_item=0x7f030023;
+        public static final int terminal_settings=0x7f030022;
+        public static final int topic_item=0x7f030023;
+        public static final int topic_list_item=0x7f030024;
     }
     public static final class menu {
         public static final int main=0x7f0d0000;
@@ -1289,17 +1291,22 @@ containing a value of this type.
          */
         public static final int abc_shareactionprovider_share_with_application=0x7f0b000b;
         public static final int app_name=0x7f0b000d;
-        public static final int cancel_button_title=0x7f0b0016;
-        public static final int close_button_title=0x7f0b0017;
+        public static final int cancel_button_title=0x7f0b0017;
+        public static final int close_button_title=0x7f0b0018;
         public static final int hello_world=0x7f0b000e;
-        public static final int ok_button_title=0x7f0b0018;
-        public static final int password=0x7f0b0019;
-        public static final int password_again=0x7f0b001a;
+        public static final int ok_button_title=0x7f0b0019;
+        public static final int password=0x7f0b001a;
+        public static final int password_again=0x7f0b001b;
         public static final int profile_create_pass_dialog_title=0x7f0b0013;
         public static final int profile_dialog_title=0x7f0b0011;
         public static final int profile_pass_dialog_title=0x7f0b0012;
         public static final int profile_retry_pass_dialog_title=0x7f0b0014;
-        public static final int select_button_title=0x7f0b0015;
+        public static final int select_button_title=0x7f0b0016;
+        public static final int udp_proxy=0x7f0b001c;
+        public static final int udp_proxy_dialog_title=0x7f0b0015;
+        public static final int udp_proxy_enable=0x7f0b001d;
+        public static final int udp_proxy_enable_off=0x7f0b001f;
+        public static final int udp_proxy_enable_on=0x7f0b001e;
     }
     public static final class style {
         /** 

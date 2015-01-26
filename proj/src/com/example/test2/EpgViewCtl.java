@@ -35,7 +35,7 @@ public class EpgViewCtl implements OnItemSelectedListener , OnListBoundReached,M
 			EPGData epg=(EPGData)arg1.getTag();
 			if (_cur_chan!=null)
 			{
-				_cur_chan.startPlay(_app.getVideoPlayer(), epg.getStart());
+				_cur_chan.startPlay(_app.getVideoPlayer(), epg.getStart(),_app.getAppConfig().getUserProfiles().getCurrentProfile(),_app.getAppConfig().getTerminalSettings());
 			}
 		}
 	 }
@@ -223,6 +223,18 @@ public class EpgViewCtl implements OnItemSelectedListener , OnListBoundReached,M
 
 	@Override
 	public void onProfilesLoaded(ProfilesData pd) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onTerminalSettingsLoaded(TerminalSettings ts) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onSetRequest(boolean success) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -12,9 +12,11 @@ public interface MiddlewareProto {
 		void onChannels(ChannelsConfig ch_conf);
 		void onEPGUploaded(ChannelsConfig.Channel ch);
 		void onProfilesLoaded(ProfilesData pd);
+		void onTerminalSettingsLoaded(TerminalSettings ts);
+		void onSetRequest(boolean success);
 	}
 	public interface ReqData{
-		public enum Request{NONE,AUTH,LOGIN,CHANNELS,EPG,TOPICS,PROFILES}
+		public enum Request{NONE,AUTH,LOGIN,CHANNELS,EPG,TOPICS,PROFILES,TERMINAL_PARAMS,UPDATE_PROFILE,SET_TERMINAL}
 
 		Request getType();
 	}
@@ -32,6 +34,9 @@ public interface MiddlewareProto {
 	public void channelsRequest(String hw,MiddlewareProto.ProtoEvents clb);
 	public void epgRequest(ChannelsConfig.Channel ch,Date from,Date to,MiddlewareProto.ProtoEvents clb);
 	public void profilesRequest(String hw,MiddlewareProto.ProtoEvents clb);
+	public void terminalSettingsRequest(String hw,MiddlewareProto.ProtoEvents clb);
+	public void updateProfile(String hw,ProfilesData.Profile p,MiddlewareProto.ProtoEvents clb);
+	public void setTerminalSettings(String hw,TerminalSettings ts,MiddlewareProto.ProtoEvents clb);
 	String getSSLSertName();
 //	ChannelsConfig getCannelsConfig();
 	Context getContext();
