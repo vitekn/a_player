@@ -38,6 +38,7 @@ public interface MiddlewareProto {
 	public void updateProfile(String hw,ProfilesData.Profile p,MiddlewareProto.ProtoEvents clb);
 	public void setTerminalSettings(String hw,TerminalSettings ts,MiddlewareProto.ProtoEvents clb);
 	String getSSLSertName();
+	public void setUrl(String url);
 //	ChannelsConfig getCannelsConfig();
 	Context getContext();
 	

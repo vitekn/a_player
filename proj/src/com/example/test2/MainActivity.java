@@ -12,9 +12,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Vibrator;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -179,12 +181,20 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 				app.setPrevView(_rightout_anim);
 				
 			}
+			@Override
+			public void onLongTouch() {
+				Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+				
+				v.vibrate(300);
+				openOptionsMenu();
+			}
 		};
 		_leftout_anim=AnimationUtils.loadAnimation(getApplicationContext(), R.animator.leftout_anim);
 		_rightout_anim=AnimationUtils.loadAnimation(getApplicationContext(), R.animator.rightout_anim);
 		_fadein_anim=AnimationUtils.loadAnimation(getApplicationContext(), R.animator.fadein_anim);
 		
 		app= (VideoApp)this.getApplication();
+		app.getAppService().setPortalUrl(getPreferences(MODE_PRIVATE).getString("url_portal", "https://demo.iptvportal.ru"));
 		app.setViewManager(this);
 		Log.d("MAINACT","START" + app.getAppConfig().getChannelsConfig());
 		adapter = new AtomPayListAdapter(MainActivity.this);
@@ -429,20 +439,26 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 							public void onClick(DialogInterface dialog, int which) {
 								AlertDialog ad=(AlertDialog)dialog;
 								String p=((EditText) ad.findViewById(R.id.udp_proxy)).getText().toString();
+								String p_url=((EditText) ad.findViewById(R.id.portal_url)).getText().toString();
 								boolean u=((ToggleButton) ad.findViewById(R.id.use_proxy)).isChecked();
 								if (p.compareTo(app.getAppConfig().getTerminalSettings().getUdpProxy())!=0 || u!=app.getAppConfig().getTerminalSettings().isUdpProxyUsed())
 								{
 									app.getAppConfig().getTerminalSettings().setUdpProxy(p);
 									app.getAppConfig().getTerminalSettings().setUdpProxyUsed(u);
+									app.getAppService().setPortalUrl(p_url);
 									app.getAppService().saveTerminalSettings();
+									SharedPreferences sp=getPreferences(MODE_PRIVATE);
+									SharedPreferences.Editor ped=sp.edit();
+									ped.putString("url_portal", p_url);
+									ped.commit();
+									
 								}
 							}
 						});
 				ad.show();
 				((ToggleButton)ad.findViewById(R.id.use_proxy)).setChecked(app.getAppConfig().getTerminalSettings().isUdpProxyUsed());
 				((EditText)ad.findViewById(R.id.udp_proxy)).setText(app.getAppConfig().getTerminalSettings().getUdpProxy());
-				
-				
+				((EditText)ad.findViewById(R.id.portal_url)).setText(app.getAppService().getPortalUrl());
 				break;
 			default:
 				break;

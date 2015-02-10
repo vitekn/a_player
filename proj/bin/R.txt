@@ -286,8 +286,8 @@ int id icon 0x7f06002a
 int id ifRoom 0x7f06000a
 int id image 0x7f060027
 int id interface_l 0x7f060046
-int id item2 0x7f060060
-int id item3 0x7f060061
+int id item2 0x7f060061
+int id item3 0x7f060062
 int id listMode 0x7f060001
 int id listView1 0x7f06003e
 int id list_item 0x7f060029
@@ -299,6 +299,7 @@ int id normal 0x7f060000
 int id player_bar 0x7f060051
 int id player_ctl_l 0x7f06004f
 int id player_play 0x7f060050
+int id portal_url 0x7f06005d
 int id profile_password 0x7f06005b
 int id profile_password_again 0x7f06005c
 int id prog_start 0x7f060058
@@ -331,12 +332,12 @@ int id textView1 0x7f06003f
 int id textView2 0x7f060041
 int id title 0x7f06002b
 int id top_action_bar 0x7f060020
-int id topicButton 0x7f06005f
+int id topicButton 0x7f060060
 int id topicList 0x7f06004a
-int id udp_proxy 0x7f06005d
+int id udp_proxy 0x7f06005e
 int id up 0x7f060021
 int id useLogo 0x7f060003
-int id use_proxy 0x7f06005e
+int id use_proxy 0x7f06005f
 int id videoView1 0x7f06003c
 int id withText 0x7f06000c
 int integer abc_max_action_buttons 0x7f0a0000
@@ -400,6 +401,7 @@ int string hello_world 0x7f0b000e
 int string ok_button_title 0x7f0b0019
 int string password 0x7f0b001a
 int string password_again 0x7f0b001b
+int string portal_url 0x7f0b0020
 int string profile_create_pass_dialog_title 0x7f0b0013
 int string profile_dialog_title 0x7f0b0011
 int string profile_pass_dialog_title 0x7f0b0012

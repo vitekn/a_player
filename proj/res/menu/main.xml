@@ -6,11 +6,11 @@
  android:showAsAction="always"
  android:title="Выбрать профиль" >
 </item>
-    <item
+<item
  android:id="@+id/item3"
  android:icon="@android:drawable/ic_menu_call"
  android:showAsAction="always"
- android:title="Настройки UDP-Proxy" >
+ android:title="Сетевые настройки" >
 </item>
-    
+
 </menu>

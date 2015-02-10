@@ -24,6 +24,7 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 	
 	private Context _ctx;
 	private String _hw="";
+	private String _host_url="";
 	private ArrayList<ReqRespPair> _req_pairs=new ArrayList<ReqRespPair>();
 	final String _ssl_sert_name="server.crt";
 	
@@ -47,7 +48,7 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 		_req_pairs.add(rrp);
 		rrp.req_data=new ReqDataAuth();
 		rrp.clb=clb;
-		rrp.resp= (SendHttpRequest) new SendHttpRequest((MiddlewareProto)this,(OnHttpRequestComplete)this).execute("https://demo.iptvportal.ru/ca/",req,Integer.toString(rrp.getId()));
+		rrp.resp= (SendHttpRequest) new SendHttpRequest((MiddlewareProto)this,(OnHttpRequestComplete)this).execute(_host_url+"/ca/",req,Integer.toString(rrp.getId()));
 		
 	}
 
@@ -64,7 +65,7 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 		_req_pairs.add(rrp);
 		rrp.req_data=new ReqDataLogin();
 		rrp.clb=clb;
-		rrp.resp= (SendHttpRequest) new SendHttpRequest((MiddlewareProto)this,(OnHttpRequestComplete)this).execute("https://demo.iptvportal.ru/ca/",req,Integer.toString(rrp.getId()));
+		rrp.resp= (SendHttpRequest) new SendHttpRequest((MiddlewareProto)this,(OnHttpRequestComplete)this).execute(_host_url+"/ca/",req,Integer.toString(rrp.getId()));
 
 	}
 	@Override
@@ -81,7 +82,7 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 		_req_pairs.add(rrp);
 		rrp.req_data=new ReqDataProfiles();
 		rrp.clb=clb;
-		rrp.resp= (SendHttpRequest) new SendHttpRequest((MiddlewareProto)this,(OnHttpRequestComplete)this).execute("https://demo.iptvportal.ru/ca/",req,Integer.toString(rrp.getId()));
+		rrp.resp= (SendHttpRequest) new SendHttpRequest((MiddlewareProto)this,(OnHttpRequestComplete)this).execute(_host_url+"/ca/",req,Integer.toString(rrp.getId()));
 		
 	}
 	@Override
@@ -97,7 +98,7 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 		_req_pairs.add(rrp);
 		rrp.req_data=new ReqUpdateProfiles();
 		rrp.clb=clb;
-		rrp.resp= (SendHttpRequest) new SendHttpRequest((MiddlewareProto)this,(OnHttpRequestComplete)this).execute("https://demo.iptvportal.ru/ca/",req,Integer.toString(rrp.getId()));
+		rrp.resp= (SendHttpRequest) new SendHttpRequest((MiddlewareProto)this,(OnHttpRequestComplete)this).execute(_host_url+"/ca/",req,Integer.toString(rrp.getId()));
 	}
 
 	@Override
@@ -133,7 +134,7 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 		_req_pairs.add(rrp);
 		rrp.req_data=new ReqUpdateProfiles();
 		rrp.clb=clb;
-		rrp.resp= (SendHttpRequest) new SendHttpRequest((MiddlewareProto)this,(OnHttpRequestComplete)this).execute("https://demo.iptvportal.ru/ca/",req,Integer.toString(rrp.getId()));
+		rrp.resp= (SendHttpRequest) new SendHttpRequest((MiddlewareProto)this,(OnHttpRequestComplete)this).execute(_host_url+"/ca/",req,Integer.toString(rrp.getId()));
 		
 	}
 	
@@ -149,7 +150,7 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 		_req_pairs.add(rrp);
 		rrp.req_data=new ReqDataConfig();
 		rrp.clb=clb;
-		rrp.resp= (SendHttpRequest) new SendHttpRequest((MiddlewareProto)this,(OnHttpRequestComplete)this).execute("https://demo.iptvportal.ru/jsonrpc/",req,Integer.toString(rrp.getId()));
+		rrp.resp= (SendHttpRequest) new SendHttpRequest((MiddlewareProto)this,(OnHttpRequestComplete)this).execute(_host_url+"/jsonrpc/",req,Integer.toString(rrp.getId()));
 		
 	}
 	@Override
@@ -175,7 +176,7 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 		rrp.req_data=new ReqDataEPG(ch);
 		rrp.clb=clb;
 		ch.epgLoading();
-		rrp.resp= (SendHttpRequest)	new SendHttpRequest((MiddlewareProto)this,(OnHttpRequestComplete)this).execute("https://demo.iptvportal.ru/jsonrpc/",req,Integer.toString(rrp.getId()));
+		rrp.resp= (SendHttpRequest)	new SendHttpRequest((MiddlewareProto)this,(OnHttpRequestComplete)this).execute(_host_url+"/jsonrpc/",req,Integer.toString(rrp.getId()));
 		
 	}
 
@@ -420,6 +421,12 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 	public String getSSLSertName() {
 
 		return _ssl_sert_name;
+	}
+
+	@Override
+	public void setUrl(String url) {
+		_host_url=url;
+		
 	}
 
 	

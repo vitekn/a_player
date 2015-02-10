@@ -20,6 +20,8 @@ public abstract class OnSwipeTouchListener implements OnTouchListener {
 
     public abstract void onSwipeRight();
 
+    public abstract void onLongTouch();
+
     public boolean onTouch(View v, MotionEvent event) {
     	
         return gestureDetector.onTouchEvent(event);
@@ -35,6 +37,12 @@ public abstract class OnSwipeTouchListener implements OnTouchListener {
             return false;
         }
 
+        @Override 
+        public void onLongPress(MotionEvent e)
+        {
+        	onLongTouch();
+        }
+        
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
             float distanceX = e2.getX() - e1.getX();

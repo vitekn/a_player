@@ -22,9 +22,12 @@ public class VideoApp extends Application {
 		private MiddlewareProto _prot;
 		private boolean _logged_in=true;
 		private Activity _r_act;
+		private String _portal_url;
 		boolean _config_loading=false;
 		
 		public AppService(MiddlewareProto proto){_prot=proto;
+//			setPortalUrl("https://demo.iptvportal.ru");
+			_prot.setUrl(_portal_url);
 		}
 		public MiddlewareProto getMiddlewareProtoInstance(){
 			return _prot;
@@ -148,6 +151,14 @@ public class VideoApp extends Application {
 		@Override
 		public void onSetRequest(boolean success) {
 			
+		}
+		public String getPortalUrl() {
+			return _portal_url;
+		}
+		public void setPortalUrl(String _portal_url) {
+			this._portal_url = _portal_url;
+			_prot.setUrl(_portal_url);
+
 		}
 	}
 	
