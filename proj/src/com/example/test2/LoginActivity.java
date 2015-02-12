@@ -14,7 +14,7 @@ public class LoginActivity extends Activity {
 	private VideoApp app;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		Log.d("LoginActivity","LOGIN IN" );
+		//Log.d("LoginActivity","LOGIN IN" );
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -28,7 +28,7 @@ public class LoginActivity extends Activity {
 	
 	public void onSubmitLogin(View v)
 	{
-		Log.d("LoginActivity","LOGIN submit" );
+		//Log.d("LoginActivity","LOGIN submit" );
 		EditText l=(EditText) findViewById(R.id.editText1);
 		EditText p=(EditText) findViewById(R.id.editText2);
 		

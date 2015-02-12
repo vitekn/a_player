@@ -70,7 +70,7 @@ public class AtomPayListAdapter extends /*ArrayAdapter<LVComItem>*/BaseAdapter i
 	
 	private void addFiltered(LVComItem i)
 	{
-		Log.d("LISTTEXT","filter |" + _filter+"|");
+		//Log.d("LISTTEXT","filter |" + _filter+"|");
 		if (_filter==null || _filter.isEmpty() || i.getName().toLowerCase().startsWith(_filter.toLowerCase()))
 		{
 			items.add(i);

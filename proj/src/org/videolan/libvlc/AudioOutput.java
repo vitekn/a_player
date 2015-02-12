@@ -40,7 +40,7 @@ public class AudioOutput {
     private static final String TAG = "LibVLC/aout";
 
     public void init(int sampleRateInHz, int channels, int samples) {
-        Log.d(TAG, sampleRateInHz + ", " + channels + ", " + samples + "=>" + channels * samples);
+        //Log.d(TAG, sampleRateInHz + ", " + channels + ", " + samples + "=>" + channels * samples);
         int minBufferSize = AudioTrack.getMinBufferSize(sampleRateInHz,
                                                         AudioFormat.CHANNEL_OUT_STEREO,
                                                         AudioFormat.ENCODING_PCM_16BIT);

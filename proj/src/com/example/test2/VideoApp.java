@@ -35,10 +35,10 @@ public class VideoApp extends Application {
 		public boolean isLoggedIn(){return _logged_in;}
 		public void login(Activity r_act, String id,String pin){
 			String hw=getHW();
-			Log.d("HW","mac="+hw);
+			//Log.d("HW","mac="+hw);
 			_r_act=r_act;
 			_prot.authRequest(id, pin, hw,this);
-			Log.d("AppService","logging in");
+			//Log.d("AppService","logging in");
 		}
 		private void loadConfig(Activity r_act)
 		{
@@ -122,11 +122,11 @@ public class VideoApp extends Application {
 		
 		@Override
 		public void onChannels(ChannelsConfig ch_conf) {
-			Log.d("APPSERV","CC " + ch_conf);
+			//Log.d("APPSERV","CC " + ch_conf);
 			_logged_in=(ch_conf!=null && ch_conf.getTopics().size()>0);
 			if (_logged_in)
 			{
-				Log.d("APPSERV","SZ "+ch_conf.getTopics().size());
+				//Log.d("APPSERV","SZ "+ch_conf.getTopics().size());
 				AppConfig ac=getAppConfig();
 				ac.setChannelsConfig(ch_conf);
 				ac.setCurTopic(ch_conf.getTopics().get(0));
@@ -139,7 +139,7 @@ public class VideoApp extends Application {
 		}
 		@Override
 		public void onEPGUploaded(Channel ch) {
-			Log.d("APP","epg uploaded");
+			//Log.d("APP","epg uploaded");
 		}
 		public boolean isConfigLoading(){return _config_loading;}
 		public void saveProfile(int pid) {

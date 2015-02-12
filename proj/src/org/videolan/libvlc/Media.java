@@ -158,10 +158,10 @@ public class Media implements Comparable<Media> {
                 mAlbum = getValueWrapper(track.Album, UnknownStringType.Album);
                 mGenre = getValueWrapper(track.Genre, UnknownStringType.Genre);
                 mArtworkURL = track.ArtworkURL;
-                Log.d(TAG, "Title " + mTitle);
-                Log.d(TAG, "Artist " + mArtist);
-                Log.d(TAG, "Genre " + mGenre);
-                Log.d(TAG, "Album " + mAlbum);
+                //Log.d(TAG, "Title " + mTitle);
+                //Log.d(TAG, "Artist " + mArtist);
+                //Log.d(TAG, "Genre " + mGenre);
+                //Log.d(TAG, "Album " + mAlbum);
             }
         }
 

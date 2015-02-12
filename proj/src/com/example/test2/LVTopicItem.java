@@ -24,7 +24,7 @@ public class LVTopicItem extends LVComItem {
 	@Override
 	public View makeView(View v, ViewGroup parent, LayoutInflater inf) {
 
-	//	Log.d("LVTopic","makeView "+ _my_topic.getName()+" "+_selected);
+	//	//Log.d("LVTopic","makeView "+ _my_topic.getName()+" "+_selected);
 		if (v==null)
 		{
 			v = inf.inflate(_layoutResourceId, parent, false);

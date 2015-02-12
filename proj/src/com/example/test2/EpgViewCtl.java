@@ -48,7 +48,7 @@ public class EpgViewCtl implements OnItemSelectedListener , OnListBoundReached,M
 		_epg_prog=ep;
 		_epg_prog.setVisibility(View.INVISIBLE);
 		_epg_l.setOnItemClickListener(new EpgListClick());
-		Log.d("epg","la1");
+		//Log.d("epg","la1");
 		_t_adapter=new ArrayAdapter<String>(ctx,R.layout.epg_topic,new ArrayList<String>());
 		_sp.setAdapter(_t_adapter);
 		
@@ -56,9 +56,9 @@ public class EpgViewCtl implements OnItemSelectedListener , OnListBoundReached,M
 		_all_ch=t.getChannels();
 		syncChannel();
 		
-		Log.d("epg","la2");
+		//Log.d("epg","la2");
 		_list_adapter = new EpgListAdapter(ctx, R.layout.epg_list_item, new ArrayList<EPGData>(),this);
-		Log.d("epg","la2 ok");
+		//Log.d("epg","la2 ok");
 		
 		_epg_l.setAdapter(_list_adapter);		
 		
@@ -85,7 +85,7 @@ public class EpgViewCtl implements OnItemSelectedListener , OnListBoundReached,M
 			EPGData ed=_list_adapter.getItem(i);
 			if (ed.getStart().getTime()<=at.getTime() && ed.getStop().getTime()>=at.getTime())
 			{
-				Log.d("EPGACT","sel ch=" + ed.getStartTime() + "-" + ed.getStopTime()+ " "+i);
+				//Log.d("EPGACT","sel ch=" + ed.getStartTime() + "-" + ed.getStopTime()+ " "+i);
 				
 				_epg_l.setSelectionAfterHeaderView();
 				_epg_l.setSelection(i);
@@ -98,7 +98,7 @@ public class EpgViewCtl implements OnItemSelectedListener , OnListBoundReached,M
 	public void refreshList(ChannelsConfig.Channel ch)
 	{
 		
-		Log.d("EPGACT","refre itp= "+_sp.getSelectedItemPosition()+" " +ch.getName()+" "+_t_adapter.getItem(_sp.getSelectedItemPosition()));
+		//Log.d("EPGACT","refre itp= "+_sp.getSelectedItemPosition()+" " +ch.getName()+" "+_t_adapter.getItem(_sp.getSelectedItemPosition()));
 		
 		if (ch.getName().equalsIgnoreCase(_t_adapter.getItem(_sp.getSelectedItemPosition())));
 		{
@@ -124,7 +124,7 @@ public class EpgViewCtl implements OnItemSelectedListener , OnListBoundReached,M
 				break;
 			}
 		}
-		Log.d("EPGACT","selected f= "+_cur_chan.getName() );
+		//Log.d("EPGACT","selected f= "+_cur_chan.getName() );
 		if (_cur_chan!=null)
 		{
 			_list_adapter.clear();
@@ -148,7 +148,7 @@ public class EpgViewCtl implements OnItemSelectedListener , OnListBoundReached,M
 
 	@Override
 	public void upperBound() {
-		Log.d("EPGACT","upb");
+		//Log.d("EPGACT","upb");
 		
 		if (_cur_chan!=null && !_cur_chan.isEpgLoading())
 		{

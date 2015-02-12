@@ -102,16 +102,16 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 		@Override
 		public void onClick(View v) {
 			
-			Log.d("MAINACT","top click");
+			//Log.d("MAINACT","top click");
 			LVTopicItem t=(LVTopicItem)v.getTag();
 			for (int i=0;i<adapter.getCount();++i)
 			{
-				Log.d("MAINACT","top click t="+t.getTopic().getName());
+				//Log.d("MAINACT","top click t="+t.getTopic().getName());
 
 				LVComItem ci=(LVComItem)adapter.getItem(i);
 				if (ci.getType()==LVComItem.TOPIC_TYPE && t.getTopic().getName().equalsIgnoreCase(((LVTopicItem)ci).getTopic().getName()))
 				{
-					Log.d("MAINACT","top click found t="+t.getTopic().getName());
+					//Log.d("MAINACT","top click found t="+t.getTopic().getName());
 					_ignore_scroll=true;
 					refreshTopicSelecton(i,_ch_lv.getLastVisiblePosition()-_ch_lv.getFirstVisiblePosition());
 					_ch_lv.setSelection(i);
@@ -131,7 +131,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 			}*/
 //			v.setSelected(true);
 	//		t.setSelected(true);
-			Log.d("MAINACT","top click ok");
+			//Log.d("MAINACT","top click ok");
 		
 		}
 	 }
@@ -142,7 +142,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 			 View lo=findViewById(R.id.ma_rel_l);
 		   int width = lo.getWidth();
 		   int height = lo.getHeight();
-		   Log.d("MAINACT","dims" + width + " " + height);
+		   //Log.d("MAINACT","dims" + width + " " + height);
 		   LayoutParams lp=vv.getLayoutParams();
 		   lp.width=width;
 		   lp.height=lp.width*9/16;
@@ -196,7 +196,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 		app= (VideoApp)this.getApplication();
 		app.getAppService().setPortalUrl(getPreferences(MODE_PRIVATE).getString("url_portal", "https://demo.iptvportal.ru"));
 		app.setViewManager(this);
-		Log.d("MAINACT","START" + app.getAppConfig().getChannelsConfig());
+		//Log.d("MAINACT","START" + app.getAppConfig().getChannelsConfig());
 		adapter = new AtomPayListAdapter(MainActivity.this);
 		_ch_lv = (ListView)findViewById(R.id.listView1);
 		_ch_lv.setAdapter(adapter);	
@@ -243,12 +243,12 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 					_player_pb.setProgress(pos);
 			}
 		});*/
-		Log.d("MAINACT","1");
+		//Log.d("MAINACT","1");
 		ListView elv=(ListView)findViewById(R.id.epg_listView);
-		Log.d("MAINACT","2");
+		//Log.d("MAINACT","2");
 		hideView(AppViewState.EPG,null);
 		hideView(AppViewState.VIDEO,null);
-		Log.d("MAINACT","4");
+		//Log.d("MAINACT","4");
 		sv.setOnTouchListener(new SurfaceView.OnTouchListener(){
 			@Override
 			public boolean onTouch(View arg0, MotionEvent arg1) {
@@ -280,14 +280,14 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 		});
 		
 		if (getIntent().getBooleanExtra("EXIT", false)) {
-			Log.d("MAINACT","START exit");
+			//Log.d("MAINACT","START exit");
 		    finish();
 		    return;
 		}
 
 		if (!app.getAppService().isLoggedIn())
 		{
-			Log.d("APP","LOGIN" );
+			//Log.d("APP","LOGIN" );
 			Intent ni=new Intent(this,LoginActivity.class);
 			startActivity(ni);
 			return;
@@ -297,9 +297,9 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 			_selected_profile=app.getAppConfig().getUserProfiles().getCurrentProfileNum();
 			initData();
 			Spinner esp=(Spinner)findViewById(R.id.epg_spinner);
-			Log.d("MAINACT","5");
+			//Log.d("MAINACT","5");
 			_epg_vc=new EpgViewCtl(app,this,esp,elv,(ProgressBar)findViewById(R.id.progressEpgLoading));
-			Log.d("MAINACT","6");
+			//Log.d("MAINACT","6");
 
 			final Handler hnd=new Handler();
 			_hide_tm=new Timer();
@@ -490,7 +490,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 	{
 		if (!_data_ok)
 		{
-			Log.d("MAINACT","initData");
+			//Log.d("MAINACT","initData");
 			refreshChannelsList();
 			ArrayList<ChannelsConfig.Topic> ts=app.getAppConfig().getChannelsConfig().getTopics();
 			_t_adapter.clear();
@@ -518,7 +518,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 		
 	}
 	private void refreshChannelsList(){
-		Log.d("MAINACT","refreshChannelsList");
+		//Log.d("MAINACT","refreshChannelsList");
 		adapter.clear();
 		ChannelsConfig.Topic ct=app.getAppConfig().getCurTopic();
 		ArrayList<ChannelsConfig.Topic> allt=app.getAppConfig().getChannelsConfig().getTopics();
@@ -533,7 +533,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 		else
 			addTopicChannelsToList(ct);
 		
-		Log.d("MAINACT","refreshChannelsList ok");
+		//Log.d("MAINACT","refreshChannelsList ok");
 		
 	}
 	private void addTopicChannelsToList(ChannelsConfig.Topic ct)
@@ -541,7 +541,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 		ArrayList<ChannelsConfig.Channel> chl=ct.getChannels();
 		for (int i=0;i<chl.size();++i)
 		{
-			Log.d("MAINACT","refreshChannelsList " + i);
+			//Log.d("MAINACT","refreshChannelsList " + i);
 			adapter.add(new LVChannelItem(chl.get(i),ct,R.layout.atom_pay_list_item,this,app));
 			//adapter.insert(new AtomPayment(chl.get(i)),0);//.get(i).getMrl(), 0,chl.get(i).getIconBytes()), 0);
 		}
@@ -556,22 +556,22 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 	@Override
 	protected void onResume()
 	{
-		Log.d("MAINACT","onresume ");
+		//Log.d("MAINACT","onresume ");
 		super.onResume();
 		if (app.getAppService().isLoggedIn() && checkConfig())
 		{
-			Log.d("MAINACT","onresume initData");
+			//Log.d("MAINACT","onresume initData");
 			initData();
 			app.getAppConfig().getCurChannel().startPlay(vv,
 														new Date(),
 														app.getAppConfig().getUserProfiles().getCurrentProfile(),
 														app.getAppConfig().getTerminalSettings());
 		//	String v=app.getAppConfig().getCurChannel().getMrl();//"http://192.168.101.29/hls/TNT/TNT.m3u8");
-			//Log.d("MAINACT","initData "+v);
+			////Log.d("MAINACT","initData "+v);
 //			vv.setVideoURI(Uri.parse(v));
 	//		vv.start();
 		}
-		Log.d("MAINACT","onresume ok");
+		//Log.d("MAINACT","onresume ok");
 	}
 	@Override
 	public void onClick(View v)
@@ -591,14 +591,14 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 
 	/*
 	public void refreshEPGDisplay(ChannelsConfig.Channel ch){
-		Log.d("MAINACT","refreshEPGDisplay");
+		//Log.d("MAINACT","refreshEPGDisplay");
 		EPGData epg=ch.getCurrentEpgData();
 		if (epg!=null)
 		{
-			Log.d("MAINACT","refreshEPGDisplay epg ok");
+			//Log.d("MAINACT","refreshEPGDisplay epg ok");
 			TextView tv=(TextView)findViewById(R.id.textViewEPG);
 			
-			Log.d("MAINACT","refreshEPGDisplay epg ok" + tv.getText() + tv);
+			//Log.d("MAINACT","refreshEPGDisplay epg ok" + tv.getText() + tv);
 			tv.setText(epg.getTitle());
 			tv.invalidate();
 
@@ -610,14 +610,14 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 			int secs=(int)((epg.getStop().getTime()- epg.getStart().getTime())/1000);
 			bar.setMax(secs);
 			bar.setProgress((int)((new Date().getTime() - epg.getStart().getTime())/1000));
-			Log.d("MAINACT","refreshEPGDisplay " + epg.getStop().getTime() +" "+epg.getStart().getTime() +" " +new Date().getTime());   
-			Log.d("MAINACT","refreshEPGDisplay epg text set " + tv.getText() + " " + ch.getName() + " "+
+			//Log.d("MAINACT","refreshEPGDisplay " + epg.getStop().getTime() +" "+epg.getStart().getTime() +" " +new Date().getTime());   
+			//Log.d("MAINACT","refreshEPGDisplay epg text set " + tv.getText() + " " + ch.getName() + " "+
 			bar.getMax()+"="+bar.getProgress());
 		
 		}
 		else
 		{
-			Log.d("MAINACT","refreshEPGDisplay epg upload");
+			//Log.d("MAINACT","refreshEPGDisplay epg upload");
 			app.getAppService().loadEPG(this,ch);
 		}
 		
@@ -625,13 +625,13 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 	*/
 	public void onVideoClicked(View v)
 	{
-		Log.d("VIDEO","CLICKED" );
+		//Log.d("VIDEO","CLICKED" );
 	}
 
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View view, int position,
 			long id) {
-		Log.d("MAINACT", "topsel#");
+		//Log.d("MAINACT", "topsel#");
 		if (checkConfig() && _select_topic)
 		{
 			LVTopicItem t=(LVTopicItem)_t_adapter.getItem(position);
@@ -659,7 +659,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 				else
 					initData();*/
 			//}
-			Log.d("MAINACT", "topsel");
+			//Log.d("MAINACT", "topsel");
 			
 		}
 		_select_topic=true;
@@ -679,11 +679,11 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 	public void onScroll(AbsListView view, int firstVisibleItem,
 			int visibleItemCount, int totalItemCount) 
 	{
-//		Log.d("MAINACT","onscroll "+ firstVisibleItem + " of "+visibleItemCount);
+//		//Log.d("MAINACT","onscroll "+ firstVisibleItem + " of "+visibleItemCount);
 		if (_ignore_scroll==false &&_first_vis_ch!=firstVisibleItem)
 		{
 			int tp=refreshTopicSelecton(firstVisibleItem,visibleItemCount);
-	//		Log.d("MAINACT","!!!onscroll");
+	//		//Log.d("MAINACT","!!!onscroll");
 			if(tp>=0)
 			{
 				_t_lv.setSelection(tp);
@@ -700,7 +700,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 		if ( visibleItemCount>0)
 		{
 			LVComItem itm=(LVComItem) adapter.getItem(firstVisibleItem);
-		//	Log.d("MAINACT","onscroll itm "+ itm);
+		//	//Log.d("MAINACT","onscroll itm "+ itm);
 			if (itm!=null)
 			{
 				int i;
@@ -713,7 +713,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 					if(cm.getType()==LVComItem.TOPIC_TYPE)
 						++topics;
 				}
-	//			Log.d("MAINACT","onscroll vt "+ topics);
+	//			//Log.d("MAINACT","onscroll vt "+ topics);
 				
 				ChannelsConfig.Topic t=null;
 				if (itm.getType()==LVComItem.CHANNEL_TYPE)
@@ -726,7 +726,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 				{
 					t=((LVTopicItem)itm).getTopic();
 				}
-//				Log.d("MAINACT","onscroll cvt "+ topics);
+//				//Log.d("MAINACT","onscroll cvt "+ topics);
 				
 				if(t!=null)
 				{
@@ -735,7 +735,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 					for (;i<_t_adapter.getCount();++i)
 					{
 						ti=(LVTopicItem)_t_adapter.getItem(i);
-				//		Log.d("MAINACT","onscroll ft "+ ti.getTopic().getName());
+				//		//Log.d("MAINACT","onscroll ft "+ ti.getTopic().getName());
 						if (ti.getTopic().getName().equalsIgnoreCase(t.getName()))
 						{
 							break;
@@ -743,19 +743,19 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 						ti.setSelected(false);
 					}
 					tp=i;
-			//		Log.d("MAINACT","onscroll fi "+ tp);
+			//		//Log.d("MAINACT","onscroll fi "+ tp);
 					for (;i<_t_adapter.getCount() && topics>0;++i,--topics)
 					{
-		//				Log.d("MAINACT","onscroll ts "+ i);
+		//				//Log.d("MAINACT","onscroll ts "+ i);
 						((LVTopicItem)_t_adapter.getItem(i)).setSelected(true);
 					}						
 					for (;i<_t_adapter.getCount();++i)
 					{
-	//					Log.d("MAINACT","onscroll tail "+ i);
+	//					//Log.d("MAINACT","onscroll tail "+ i);
 						((LVTopicItem)_t_adapter.getItem(i)).setSelected(false);
 					}
 
-//					Log.d("MAINACT","onscroll "+_t_adapter.getCount()+" t "+ t +" "+i + " sel " +_t_lv.getSelectedItemPosition());
+//					//Log.d("MAINACT","onscroll "+_t_adapter.getCount()+" t "+ t +" "+i + " sel " +_t_lv.getSelectedItemPosition());
 					_t_adapter.notifyDataSetChanged();
 //					if (i<_t_adapter.getCount() && _t_lv.getSelectedItemPosition()!=i)
 //					{

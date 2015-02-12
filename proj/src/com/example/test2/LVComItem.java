@@ -16,11 +16,11 @@ public abstract class LVComItem implements Serializable,OnChannelDataChanged {
 
 		@Override
 		protected Bitmap doInBackground(byte[]... params) {
-			//Log.d("LISTITEM AID","param l= " + params.length);
+			////Log.d("LISTITEM AID","param l= " + params.length);
 			if (params.length>0)
 			{
 				byte[] d=params[0];
-			//	Log.d("LISTITEM AID","decoding= " + d.length);
+			//	//Log.d("LISTITEM AID","decoding= " + d.length);
 				return BitmapFactory.decodeByteArray(d, 0, d.length);
 				
 			}

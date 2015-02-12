@@ -34,7 +34,7 @@ public class VideoActivity extends Activity implements OnTouchListener{
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
 		// TODO Auto-generated method stub
-		Log.d("VIDEO","touched" );
+		//Log.d("VIDEO","touched" );
 		finish();
 		// TODO Auto-generated method stub
 		return false;

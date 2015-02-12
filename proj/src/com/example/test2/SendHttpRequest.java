@@ -51,7 +51,7 @@ public class SendHttpRequest extends AsyncTask<String,Integer,SendHttpRequest.Ra
 		if (params.length>3)
 			 method=params[3];
 		
-		Log.d("HTTP","sendRequest url \n" + s_url + "method="+method);
+		//Log.d("HTTP","sendRequest url \n" + s_url + "method="+method);
 		boolean https=false;
 		HttpURLConnection urlConnection;
 		URL url;
@@ -72,35 +72,35 @@ public class SendHttpRequest extends AsyncTask<String,Integer,SendHttpRequest.Ra
 			try {
 				cf = CertificateFactory.getInstance("X.509");
 			} catch (CertificateException e) {
-				Log.d("HTTP","sendRequest c");
+				//Log.d("HTTP","sendRequest c");
 				return rre;
 			}
-			Log.d("HTTP","sendRequest -1");
+			//Log.d("HTTP","sendRequest -1");
 			// From https://www.washington.edu/itconnect/security/ca/load-der.crt
 			InputStream caInput;
 			try {
 				caInput = _mwp.getContext().getAssets().open(_mwp.getSSLSertName());
 			} catch (IOException e) {
-				Log.d("HTTP","sendRequest c");
+				//Log.d("HTTP","sendRequest c");
 				return rre;
 			}//new BufferedInputStream(new FileInputStream("load-der.crt"));
-			Log.d("HTTP","sendRequest 0");
+			//Log.d("HTTP","sendRequest 0");
 			Certificate ca;
 			try {
 			    ca = cf.generateCertificate(caInput);
 			    System.out.println("ca=" + ((X509Certificate) ca).getSubjectDN());
 			} catch (CertificateException e) {
-				Log.d("HTTP","sendRequest c");
+				//Log.d("HTTP","sendRequest c");
 				return rre;
 			} finally {
 			    try {
 					caInput.close();
 				} catch (IOException e) {
-					Log.d("HTTP","sendRequest c");
+					//Log.d("HTTP","sendRequest c");
 					return rre;
 				}
 			}
-			Log.d("HTTP","sendRequest 1");
+			//Log.d("HTTP","sendRequest 1");
 			// Create a KeyStore containing our trusted CAs
 			String keyStoreType = KeyStore.getDefaultType();
 			KeyStore keyStore;
@@ -120,7 +120,7 @@ public class SendHttpRequest extends AsyncTask<String,Integer,SendHttpRequest.Ra
 				urlConnection=surlConnection;
 
 			} catch (Exception e) {
-				Log.d("HTTP","sendRequest ks");
+				//Log.d("HTTP","sendRequest ks");
 				return rre;
 			}
 		}
@@ -129,7 +129,7 @@ public class SendHttpRequest extends AsyncTask<String,Integer,SendHttpRequest.Ra
 			urlConnection = (HttpURLConnection) url.openConnection();
 			}
 			catch (Exception e) {
-				Log.d("HTTP","sendRequest ks");
+				//Log.d("HTTP","sendRequest ks");
 				return rre;
 			}
 		// Create a TrustManager that trusts the CAs in our KeyStore
@@ -139,7 +139,7 @@ public class SendHttpRequest extends AsyncTask<String,Integer,SendHttpRequest.Ra
 			urlConnection.setRequestMethod(method);
 			if (method.equalsIgnoreCase("POST"))
 			{
-				Log.d("HTTP","POST Data="+data);
+				//Log.d("HTTP","POST Data="+data);
 				urlConnection.setDoOutput(true);
 				urlConnection.setDoInput(true);
 				urlConnection.connect();

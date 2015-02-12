@@ -38,12 +38,12 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 	@Override
 	public void authRequest(String id, String pin, String hw,MiddlewareProto.ProtoEvents clb) {
 		_hw=hw;
-		Log.d("PROTO", "AR");
+		//Log.d("PROTO", "AR");
 		String req="{\"jsonrpc\":\"2.0\",\"id\":123,\"method\":\"register_terminal\""
 					+",\"params\"  : "
 					+ "{\"macaddr\": \""+hw+"\",\"username\" : \""+id+"\",\"password\" : \""+pin+"\"}}";
 
-		Log.d("PROTO", req);
+		//Log.d("PROTO", req);
 		ReqRespPair rrp=new ReqRespPair();
 		_req_pairs.add(rrp);
 		rrp.req_data=new ReqDataAuth();
@@ -55,12 +55,12 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 	@Override
 	public void channelsRequest(String hw,MiddlewareProto.ProtoEvents clb) {
 		_hw=hw;
-		Log.d("PROTO", "CR");
+		//Log.d("PROTO", "CR");
 		String req="{\"jsonrpc\":\"2.0\",\"id\":123,\"method\":\"login\""
 					+",\"params\"  : {"
 					+ "\"macaddr\": \""+hw+"\"}}";
 
-		Log.d("PROTO", req);
+		//Log.d("PROTO", req);
 		ReqRespPair rrp=new ReqRespPair();
 		_req_pairs.add(rrp);
 		rrp.req_data=new ReqDataLogin();
@@ -72,12 +72,12 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 	public void profilesRequest(String hw,MiddlewareProto.ProtoEvents clb)
 	{
 		_hw=hw;
-		Log.d("PROTO", "CR");
+		//Log.d("PROTO", "CR");
 		String req="{\"jsonrpc\":\"2.0\",\"id\":123,\"method\":\"get_profiles\""
 					+",\"params\"  : {"
 					+ "\"macaddr\": \""+hw+"\"}}";
 
-		Log.d("PROTO", req);
+		//Log.d("PROTO", req);
 		ReqRespPair rrp=new ReqRespPair();
 		_req_pairs.add(rrp);
 		rrp.req_data=new ReqDataProfiles();
@@ -88,12 +88,12 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 	@Override
 	public void updateProfile(String hw, Profile p, ProtoEvents clb) {
 		_hw=hw;
-		Log.d("PROTO", "CR");
+		//Log.d("PROTO", "CR");
 		String req="{\"jsonrpc\":\"2.0\",\"id\":123,\"method\":\"update_profile\""
 					+",\"params\"  : {"
 					+ "\"macaddr\": \""+hw+"\",\"profile_id\":"+p.getId()+",\"profile_password\":\""+p.getPassword()+"\"}}";
 
-		Log.d("PROTO", req);
+		//Log.d("PROTO", req);
 		ReqRespPair rrp=new ReqRespPair();
 		_req_pairs.add(rrp);
 		rrp.req_data=new ReqUpdateProfiles();
@@ -105,12 +105,12 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 	public void terminalSettingsRequest(String hw,MiddlewareProto.ProtoEvents clb)
 	{
 		_hw=hw;
-		Log.d("PROTO", "CR");
+		//Log.d("PROTO", "CR");
 		String req="{\"jsonrpc\":\"2.0\",\"id\":123,\"method\":\"get_terminal_params\""
 					+",\"params\"  : {"
 					+ "\"macaddr\": \""+hw+"\"}}";
 
-		Log.d("PROTO", req);
+		//Log.d("PROTO", req);
 		ReqRespPair rrp=new ReqRespPair();
 		_req_pairs.add(rrp);
 		rrp.req_data=new ReqDataTParams();
@@ -124,12 +124,12 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 	public void setTerminalSettings(String hw, TerminalSettings ts,
 			ProtoEvents clb) {
 		_hw=hw;
-		Log.d("PROTO", "CR");
+		//Log.d("PROTO", "CR");
 		String req="{\"jsonrpc\":\"2.0\",\"id\":123,\"method\":\"set_terminal_params\""
 					+",\"params\"  : {"
 					+ "\"macaddr\": \""+hw+"\",\"profile_id\":"+ts.getCurrentProfileId()+",\"use_mcast_proxy\":\""+ts.isUdpProxyUsed()+"\",\"mcast_proxy_url\":\""+ts.getUdpProxy()+"\"}}";
 
-		Log.d("PROTO", req);
+		//Log.d("PROTO", req);
 		ReqRespPair rrp=new ReqRespPair();
 		_req_pairs.add(rrp);
 		rrp.req_data=new ReqUpdateProfiles();
@@ -140,12 +140,12 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 	
 	private void playlistRequest(MiddlewareProto.ProtoEvents clb)
 	{
-		Log.d("PROTO", "CR");
+		//Log.d("PROTO", "CR");
 		String req="{\"jsonrpc\":\"2.0\",\"id\":123,\"method\":\"get_playlists\""
 					+",\"params\"  : {"
 					+ "\"macaddr\": \""+_hw+"\"}}";
 
-		Log.d("PROTO", req);
+		//Log.d("PROTO", req);
 		ReqRespPair rrp=new ReqRespPair();
 		_req_pairs.add(rrp);
 		rrp.req_data=new ReqDataConfig();
@@ -156,7 +156,7 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 	@Override
 	public void epgRequest(ChannelsConfig.Channel ch,Date from,Date to,MiddlewareProto.ProtoEvents clb)
 	{
-		Log.d("PROTO", "ER");
+		//Log.d("PROTO", "ER");
 		String req="{\"jsonrpc\":\"2.0\",\"id\":123,\"method\":\"get_epg\""
 					+",\"params\"  : {"
 				   +"\"channel_id\" : "+ ch.getId() +",";
@@ -170,7 +170,7 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 				    
 							req=req+ "}}";
 
-		Log.d("PROTO", req);
+		//Log.d("PROTO", req);
 		ReqRespPair rrp=new ReqRespPair();
 		_req_pairs.add(rrp);
 		rrp.req_data=new ReqDataEPG(ch);
@@ -213,11 +213,11 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 		
 		//result=new Scanner(result).useDelimiter("\\A").next();
 		ReqRespPair rrp=findRRP(rid);
-		Log.d("PROTO","RESPONSE= "+result+" =END " +rrp );
+		//Log.d("PROTO","RESPONSE= "+result+" =END " +rrp );
 		if (rrp!=null)
 		{
 			MiddlewareProto.ProtoEvents pre=rrp.clb;
-			//Log.d("PROTO","RESP= "+result);
+			////Log.d("PROTO","RESP= "+result);
 			switch (rrp.req_data.getType())
 			{
 			case UPDATE_PROFILE:
@@ -267,7 +267,7 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 				}
 				catch(JSONException e)
 				{
-					Log.d("PROTO","profiles except");
+					//Log.d("PROTO","profiles except");
 				}
 				pre.onProfilesLoaded(pd);
 				
@@ -298,7 +298,7 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 				break;
 			case CHANNELS:
 				try {
-					Log.d("PROTO", "parsing channels");
+					//Log.d("PROTO", "parsing channels");
 					JSONObject object;
 					object = (JSONObject) new JSONTokener(result).nextValue();
 					object = object.getJSONObject("result");
@@ -308,7 +308,7 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 					ChannelsConfig chc=new ChannelsConfig();
 					for (int i=0;i<t.length();++i)
 					{
-						Log.d("PROTO", "parsing one topic");
+						//Log.d("PROTO", "parsing one topic");
 						JSONObject to=t.getJSONObject(i);
 						String tname=to.getString("name");
 						String ticon=to.getString("logo");
@@ -332,7 +332,7 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 			case EPG:
 				ReqDataEPG epgrd=(ReqDataEPG)rrp.req_data;
 				try{
-					Log.d("PROTO", "parsing channels");
+					//Log.d("PROTO", "parsing channels");
 					JSONObject object;
 					object = (JSONObject) new JSONTokener(result).nextValue();
 					object = object.getJSONObject("result");
@@ -377,7 +377,7 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 	private void fillTopic(JSONArray ml,ChannelsConfig.Topic t,JSONArray items)
 	{
 		try{
-			Log.d("PROTO", "fillTopic");
+			//Log.d("PROTO", "fillTopic");
 			for (int i=0;i<items.length();++i)
 			{
 				int ch_id=items.getInt(i);
@@ -385,7 +385,7 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 				for (int j=0;j<ml.length();++j)
 				{
 					JSONObject ch=ml.getJSONObject(j);
-				//	Log.d("PROTO","CHANNEL= "+ch.toString());
+				//	//Log.d("PROTO","CHANNEL= "+ch.toString());
 					if (ch.getInt("id")==ch_id)
 					{
 						String n=ch.getString("name");
@@ -412,7 +412,7 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 		}
 		catch(Exception e)
 		{
-			Log.d("PROTO","exc="+e.toString());
+			//Log.d("PROTO","exc="+e.toString());
 			return;
 		}
 	}

@@ -36,11 +36,11 @@ public class ChannelsConfig {
 		public String getName(){return _name;}
 
 		public String getIconUrl(){return _icon_url;}
-		public byte[] getIconBytes(){		//	Log.d("CHANNEL","getIconBytes" + _icon + _icon.length);
+		public byte[] getIconBytes(){		//	//Log.d("CHANNEL","getIconBytes" + _icon + _icon.length);
 			return _icon;}
 		@Override
 		public void onHttpRequestComplete(byte[] res,int id) {
-				Log.d("CHANNEL","ICON LOADED");
+				//Log.d("CHANNEL","ICON LOADED");
 				_icon=res;
 				if (_icon==null)
 					_icon=new byte[0];
@@ -189,7 +189,7 @@ public class ChannelsConfig {
 		}
 		
 		public String getMrl(){
-			Log.d("CHANNEL","getMrl");
+			//Log.d("CHANNEL","getMrl");
 			return _mrl;}
 		
 		private String getTimeShiftUrlForProgramm(long secs_ago)
@@ -219,7 +219,7 @@ public class ChannelsConfig {
 				{
 					if (_epg.get(i).getStart().getTime()<=epg.getStart().getTime())
 					{
-						Log.d("CHANNEL","rem epg "+ epg.getTitle() +" t "+epg.getStartTime()+" at "+i);
+						//Log.d("CHANNEL","rem epg "+ epg.getTitle() +" t "+epg.getStartTime()+" at "+i);
 						_epg.remove(i);
 					}
 					else
@@ -227,7 +227,7 @@ public class ChannelsConfig {
 				}
 			} while (i<_epg.size());
 
-//			Log.d("CHANNEL","add epg "+ epg.getTitle() +" t "+epg.getStartTime()+" at "+i);
+//			//Log.d("CHANNEL","add epg "+ epg.getTitle() +" t "+epg.getStartTime()+" at "+i);
 		//	epg.setUrl(getTimeShiftUrlForProgramm(epg));
 			epg.setTimeShift(!getArchiveUrlForProgramm(epg).isEmpty());
 			_epg.add(i,epg);
