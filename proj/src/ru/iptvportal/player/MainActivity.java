@@ -7,8 +7,7 @@ import java.util.TimerTask;
 
 import org.videolan.libvlc.VlcPlayer;
 
-import com.example.test2.R;
-
+import ru.iptvportal.player.R;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -19,6 +18,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -48,6 +48,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.SeekBar;
+import android.widget.Toast;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -122,40 +123,8 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 				}
 			}
 		
-			/*for (int i=0;i<_t_adapter.getCount();++i)
-			{
-				LVTopicItem ti=(LVTopicItem)_t_adapter.getItem(i);
-				if (t.equals(ti))
-				{
-					_t_lv.setSelection(i);
-					_t_lv.invalidate();
-				}
-			}*/
-//			v.setSelected(true);
-	//		t.setSelected(true);
-			//Log.d("MAINACT","top click ok");
-		
 		}
 	 }
-	 /*
-	 class ReLayout implements OnGlobalLayoutListener {
-		 @Override
-		  public void onGlobalLayout() {
-			 View lo=findViewById(R.id.ma_rel_l);
-		   int width = lo.getWidth();
-		   int height = lo.getHeight();
-		   //Log.d("MAINACT","dims" + width + " " + height);
-		   LayoutParams lp=vv.getLayoutParams();
-		   lp.width=width;
-		   lp.height=lp.width*9/16;
-		   lp.width=width;
-				
-		   vv.setLayoutParams(lp);
-		   vv.requestLayout();
-
-		   lo.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-		 }
-		 }*/
 	 
 	 @Override
 	 public boolean dispatchTouchEvent (MotionEvent ev) {
@@ -196,7 +165,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 		_fadein_anim=AnimationUtils.loadAnimation(getApplicationContext(), R.animator.fadein_anim);
 		
 		app= (VideoApp)this.getApplication();
-		app.getAppService().setPortalUrl(getPreferences(MODE_PRIVATE).getString("url_portal", "https://demo.iptvportal.ru"));
+		app.getAppService().setPortalUrl(PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString("url_portal", "https://go.iptvportal.ru"));
 		app.setViewManager(this);
 		//Log.d("MAINACT","START" + app.getAppConfig().getChannelsConfig());
 		adapter = new AtomPayListAdapter(MainActivity.this);
@@ -250,6 +219,10 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 		//Log.d("MAINACT","2");
 		hideView(AppViewState.EPG,null);
 		hideView(AppViewState.VIDEO,null);
+		hideView(AppViewState.INTERFACE,null);
+		hideView(AppViewState.LOGIN,null);
+		findViewById(R.id.loginprogressBarEPG).setVisibility(View.INVISIBLE);
+
 		//Log.d("MAINACT","4");
 		sv.setOnTouchListener(new SurfaceView.OnTouchListener(){
 			@Override
@@ -289,11 +262,16 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 
 		if (!app.getAppService().isLoggedIn())
 		{
+			getView(AppViewState.LOGIN).setVisibility(View.VISIBLE);
+
 			//Log.d("APP","LOGIN" );
-			Intent ni=new Intent(this,LoginActivity.class);
-			startActivity(ni);
+		//	Intent ni=new Intent(this,LoginActivity.class);
+		// startActivity(ni);
 			return;
 		}
+		
+		getView(AppViewState.INTERFACE).setVisibility(View.VISIBLE);
+
 		if (checkConfig())
 		{
 			_selected_profile=app.getAppConfig().getUserProfiles().getCurrentProfileNum();
@@ -330,16 +308,27 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 		}
 	}
 	
+	public void onSubmitLogin(View v)
+	{
+		EditText l=(EditText) findViewById(R.id.logineditText1);
+		EditText p=(EditText) findViewById(R.id.logineditText2);
+	
+		app.getAppService().login(this,l.getText().toString(),p.getText().toString());
+		ProgressBar pb=(ProgressBar) findViewById(R.id.loginprogressBarEPG);
+		pb.setVisibility(View.VISIBLE);
+		
+	}
+	
 	@Override 
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
-		if (app.getAppService().isLoggedIn())
-		{
+//		if (app.getAppService().isLoggedIn())
+	//	{
 			MenuInflater mi=getMenuInflater();
 			mi.inflate(R.menu.main, menu);
 			return true;
-		}
-		return false;
+		//}
+		//return false;
 	}
 
 	public Activity getActivity(){return this;}
@@ -443,16 +432,19 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 								String p=((EditText) ad.findViewById(R.id.udp_proxy)).getText().toString();
 								String p_url=((EditText) ad.findViewById(R.id.portal_url)).getText().toString();
 								boolean u=((ToggleButton) ad.findViewById(R.id.use_proxy)).isChecked();
-								if (p.compareTo(app.getAppConfig().getTerminalSettings().getUdpProxy())!=0 || u!=app.getAppConfig().getTerminalSettings().isUdpProxyUsed())
+								//Log.d("MAINACT","saving prefs"+u);
+								
+								if (p_url.compareTo(app.getAppService().getPortalUrl())!=0 || p.compareTo(app.getAppConfig().getTerminalSettings().getUdpProxy())!=0 || u!=app.getAppConfig().getTerminalSettings().isUdpProxyUsed())
 								{
 									app.getAppConfig().getTerminalSettings().setUdpProxy(p);
 									app.getAppConfig().getTerminalSettings().setUdpProxyUsed(u);
 									app.getAppService().setPortalUrl(p_url);
 									app.getAppService().saveTerminalSettings();
-									SharedPreferences sp=getPreferences(MODE_PRIVATE);
+									SharedPreferences sp= PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 									SharedPreferences.Editor ped=sp.edit();
 									ped.putString("url_portal", p_url);
-									ped.commit();
+									boolean cr=ped.commit();
+								//	Log.d("MAINACT","saving prefs"+cr);
 									
 								}
 							}
@@ -564,10 +556,15 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 		{
 			//Log.d("MAINACT","onresume initData");
 			initData();
-			app.getAppConfig().getCurChannel().startPlay(vv,
+			if (!app.getAppConfig().getCurChannel().startPlay(vv,
 														new Date(),
 														app.getAppConfig().getUserProfiles().getCurrentProfile(),
-														app.getAppConfig().getTerminalSettings());
+														app.getAppConfig().getTerminalSettings()))
+			{
+				Toast toast = Toast.makeText(this, 
+						   "Ограничение 18+. Включите профиль 18+", Toast.LENGTH_SHORT); 
+						toast.show(); 
+			}
 		//	String v=app.getAppConfig().getCurChannel().getMrl();//"http://192.168.101.29/hls/TNT/TNT.m3u8");
 			////Log.d("MAINACT","initData "+v);
 //			vv.setVideoURI(Uri.parse(v));
@@ -585,8 +582,14 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 			app.getAppConfig().setCurChannel(cch);
 			setCurrentChannelName();
 			hideView(AppViewState.VIDEO,null);
-			cch.startPlay(vv, new Date(),app.getAppConfig().getUserProfiles().getCurrentProfile(),
-															app.getAppConfig().getTerminalSettings());
+			
+			if (!cch.startPlay(vv, new Date(),app.getAppConfig().getUserProfiles().getCurrentProfile(),
+															app.getAppConfig().getTerminalSettings()))
+			{
+				Toast toast = Toast.makeText(this, 
+						   "Ограничение 18+. Включите профиль 18+", Toast.LENGTH_SHORT); 
+						toast.show(); 
+			}
 			adapter.notifyDataSetChanged();
 		}	
 	}
@@ -799,6 +802,10 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 			case VIDEO:
 				view=findViewById(R.id.player_ctl_l);
 			break;
+			case LOGIN:
+				view=findViewById(R.id.login_l);
+			break;
+				
 		}
 		return view;
 		

@@ -3,9 +3,10 @@ package ru.iptvportal.player;
 import android.view.animation.Animation;
 
 public interface ViewManager {
-	public enum AppViewState {INTERFACE,EPG,VIDEO;
+	public enum AppViewState {INTERFACE,EPG,VIDEO,LOGIN;
+	
 	 public AppViewState getNext() {
-	     return this.ordinal() < AppViewState.values().length - 1
+	     return this.ordinal() < AppViewState.values().length - 2
 	         ? AppViewState.values()[this.ordinal() + 1]
 	         : INTERFACE;
 	   }

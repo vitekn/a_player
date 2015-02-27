@@ -5,7 +5,7 @@ import java.util.Date;
 
 import ru.iptvportal.player.ChannelsConfig.Channel;
 
-import com.example.test2.R;
+import ru.iptvportal.player.R;
 
 import android.content.Context;
 import android.net.Uri;

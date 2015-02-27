@@ -1,7 +1,7 @@
 package ru.iptvportal.player;
 
 
-import com.example.test2.R;
+import ru.iptvportal.player.R;
 
 import android.util.Log;
 import android.view.LayoutInflater;

@@ -3,7 +3,7 @@ package ru.iptvportal.player;
 import java.util.Date;
 import java.util.List;
 
-import com.example.test2.R;
+import ru.iptvportal.player.R;
 
 import android.app.Activity;
 import android.content.Context;

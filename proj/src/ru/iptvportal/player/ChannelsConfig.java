@@ -123,8 +123,11 @@ public class ChannelsConfig {
 		};
 		
 		public boolean startPlay(VlcPlayer p,Date start,ProfilesData.Profile up,TerminalSettings ts){
+			//Log.d("CHANNEL","startPlay" + up.getAgeLimit() + " "+ _age_rating);
 			if (up.getAgeLimit()<_age_rating)
+			{
 				return false;
+			}
 			String pref="";
 			if (ts.isUdpProxyUsed())
 			{

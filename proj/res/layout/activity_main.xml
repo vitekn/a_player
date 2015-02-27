@@ -22,88 +22,70 @@
         android:layout_alignParentTop="true"
 	 >
     
-    <RelativeLayout
-        android:id="@+id/actionBar"
-        android:layout_width="fill_parent"
-        android:layout_height="40dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="0dp"
-        android:background="#80000000" >
+	    <RelativeLayout
+	        android:id="@+id/actionBar"
+	        android:layout_width="fill_parent"
+	        android:layout_height="40dp"
+	        android:layout_alignParentLeft="true"
+	        android:layout_alignParentRight="true"
+	        android:layout_alignParentTop="true"
+	        android:layout_marginBottom="10dp"
+	        android:layout_marginTop="0dp"
+	        android:background="#80000000" >
 
-        <!--   <ImageButton
-            android:id="@+id/fullScreen"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:contentDescription="@string/app_name"
-            android:onClick="toggleInterface" />
+	        <SearchView
+	            android:id="@+id/channelSearch"
+				android:imeOptions="flagNoExtractUi"
+	            android:layout_width="170dp"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentRight="true"
+	            android:layout_gravity="right"
+	            android:ems="10"
+	            android:inputType="text"
+	            android:textColor="#f0f0f0" 
+	            android:textSize="20sp" 
+	            />
         
-        <ImageButton
-            android:id="@+id/epgButton"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_toRightOf="@id/fullScreen"
-            android:contentDescription="@string/app_name"
-            android:onClick="toggleEpg" />
-        -->
-
-        <SearchView
-            android:id="@+id/channelSearch"
-			android:imeOptions="flagNoExtractUi"
-            android:layout_width="170dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_gravity="right"
-            android:ems="10"
-            android:inputType="text"
-            android:textColor="#f0f0f0" 
-            android:textSize="20sp" 
-            />
+	        <TextView
+	            android:id="@+id/currentChannel"
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_marginLeft="10dp"
+	            android:layout_marginRight="10dp"
+	            android:layout_alignParentLeft="true"
+	            android:layout_alignParentTop="true"
+	            android:text=""
+	            android:textColor="#f0f0f0"
+	            android:textSize="30sp" />
+	<!--             android:layout_toLeftOf="@id/channelSearch"
+	            android:layout_toRightOf="@id/epgButton" -->
         
-        <TextView
-            android:id="@+id/currentChannel"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:text=""
-            android:textColor="#f0f0f0"
-            android:textSize="30sp" />
-<!--             android:layout_toLeftOf="@id/channelSearch"
-            android:layout_toRightOf="@id/epgButton" -->
+	    </RelativeLayout>
         
-    </RelativeLayout>
-        
-    <ListView
-        android:id="@+id/topicList"
-        android:layout_width="80dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/actionBar"
-        android:layout_centerVertical="false"
-        android:background="@drawable/spinner_grad"
-        android:choiceMode="singleChoice"
-        android:popupBackground="#202020" />
-
-    <ListView
-        android:id="@+id/listView1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignTop="@id/topicList"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@id/topicList"
-        android:choiceMode="singleChoice"
-        android:divider="@drawable/divider_grad"
-        android:dividerHeight="2dp" >
-
-    </ListView>
+	    <ListView
+	        android:id="@+id/topicList"
+	        android:layout_width="80dp"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:layout_below="@id/actionBar"
+	        android:layout_centerVertical="false"
+	        android:background="@drawable/spinner_grad"
+	        android:choiceMode="singleChoice"
+	        android:popupBackground="#202020" />
+	
+	    <ListView
+	        android:id="@+id/listView1"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentBottom="true"
+	        android:layout_alignTop="@id/topicList"
+	        android:layout_marginLeft="10dp"
+	        android:layout_toRightOf="@id/topicList"
+	        android:choiceMode="singleChoice"
+	        android:divider="@drawable/divider_grad"
+	        android:dividerHeight="2dp" >
+	
+	    </ListView>
 
 	</RelativeLayout>
 	
@@ -180,5 +162,76 @@
 	         android:layout_toRightOf="@id/player_play" />
         	    
 	</RelativeLayout>
-	    		
+	
+	<RelativeLayout 
+	    android:id="@+id/login_l"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+	 >
+	     
+    <TextView
+        android:id="@+id/logintextView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/logineditText1"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="37dp"
+        android:text="Login" />
+
+        
+    <EditText
+        android:id="@+id/logineditText1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/logintextView1"
+        android:layout_centerHorizontal="true"
+        android:ems="10" >        
+        <requestFocus />
+    </EditText>
+        
+    
+    <TextView
+        android:id="@+id/logintextView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/logineditText1"
+        android:layout_below="@+id/logineditText1"
+        android:layout_marginTop="43dp"
+        android:text="Password" />
+    
+    
+    <EditText
+        android:id="@+id/logineditText2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/logintextView2"
+        android:layout_below="@+id/logintextView2"
+        android:ems="10"
+        android:inputType="textPassword" />
+
+	<Button
+        android:id="@+id/loginbutton1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/logineditText2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="51dp"
+        android:onClick="onSubmitLogin"
+        android:text="OK" />
+
+    <ProgressBar
+        android:id="@+id/loginprogressBarEPG"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/loginbutton1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="23dp" />
+    
+	    	     
+	</RelativeLayout>
+	    	
+		    		
 </RelativeLayout>

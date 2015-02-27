@@ -261,6 +261,7 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 						boolean rp=false;
 						try{rp=to.getBoolean("require_password");}
 						catch(JSONException e){}
+						//Log.d("PROTO","profiles pass" + pass);
 						pd.addProfile(to.getInt("id"),to.getString("name"),to.getString("title"), rp, to.getInt("age_limit"),pass);
 					}
 				}
@@ -384,7 +385,7 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 				for (int j=0;j<ml.length();++j)
 				{
 					JSONObject ch=ml.getJSONObject(j);
-				//	//Log.d("PROTO","CHANNEL= "+ch.toString());
+					//Log.d("PROTO","CHANNEL= "+ch.toString());
 					if (ch.getInt("id")==ch_id)
 					{
 						String n=ch.getString("name");
@@ -399,7 +400,7 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 
 						int age_r=0;
 						try{
-							age_r=ch.getInt("age_rating");
+							age_r=ch.getInt("age_limit");
 						}catch(Exception e){}
 						
 						int id=ch.getInt("channel_id");

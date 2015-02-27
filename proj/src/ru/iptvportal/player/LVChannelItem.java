@@ -13,7 +13,7 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.test2.R;
+import ru.iptvportal.player.R;
 
 
 public class LVChannelItem extends LVComItem implements MiddlewareProto.ProtoEvents{
