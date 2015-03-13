@@ -4,6 +4,7 @@ public class TerminalSettings {
 	private String _udp_proxy="";
 	private boolean _use_udp_proxy=false;
 	private int _current_profile=0;
+	public TerminalSettings(){}
 	public TerminalSettings(String udp_p,boolean use_udp_p,int cur_prof)
 	{
 		_udp_proxy=udp_p;

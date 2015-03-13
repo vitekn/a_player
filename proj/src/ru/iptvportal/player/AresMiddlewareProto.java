@@ -385,9 +385,10 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 				for (int j=0;j<ml.length();++j)
 				{
 					JSONObject ch=ml.getJSONObject(j);
-					//Log.d("PROTO","CHANNEL= "+ch.toString());
+					Log.d("PROTO","CHANNEL= "+ch.toString());
 					if (ch.getInt("id")==ch_id)
 					{
+						
 						String n=ch.getString("name");
 						String m=ch.getString("mrl");
 						String u=ch.getString("logo");
@@ -399,12 +400,14 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 						}catch(Exception e){}
 
 						int age_r=0;
+						int ind=0;
 						try{
 							age_r=ch.getInt("age_limit");
+							ind=ch.getInt("index");
 						}catch(Exception e){}
-						
+						Log.d("PROTO","ind="+ind);
 						int id=ch.getInt("channel_id");
-						t.addChannel(n,m,u,id,tm_url,tm_dur,age_r);
+						t.addChannel(n,m,u,id,tm_url,tm_dur,age_r,ind);
 						break;
 					}
 				}
@@ -413,8 +416,8 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 		catch(Exception e)
 		{
 			//Log.d("PROTO","exc="+e.toString());
-			return;
 		}
+		t.sortByIndex();
 	}
 
 	@Override

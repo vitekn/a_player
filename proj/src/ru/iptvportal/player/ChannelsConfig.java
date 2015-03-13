@@ -1,6 +1,8 @@
 package ru.iptvportal.player;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
 
@@ -53,6 +55,13 @@ public class ChannelsConfig {
 		public void notifyAllDataChanged(){ for (OnChannelDataChanged l : _listeners){l.onChannelDataChanged(this);}}
 	}
 	
+	class ChannelIndexComparator implements Comparator<Channel>{
+		@Override
+		public int compare(Channel arg0, Channel arg1) {
+			return arg0.index-arg1.index;
+		}
+	}
+	
 	class Channel extends GenItem {
 		private String _mrl;
 		private ArrayList<EPGData> _epg=new ArrayList<EPGData>();	
@@ -66,8 +75,9 @@ public class ChannelsConfig {
 		private long _ts_pend=0;
 		private long _tshift=0;
 		private int _age_rating=0;
+		private int index=0;
 		
-		public Channel(String name,String mrl,String icon_url,int id,String tm_url,int tm_dur, int age_r){
+		public Channel(String name,String mrl,String icon_url,int id,String tm_url,int tm_dur, int age_r,int index){
 			super(name,icon_url,id);
 			_mrl=mrl;
 			_timeshift_url=tm_url;
@@ -314,9 +324,12 @@ public class ChannelsConfig {
 			super(name,icon_url,id);
 		}
 		public ArrayList<Channel> getChannels(){return _channels;}
-		public void addChannel(String name,String mrl,String icon_url,int id,String tm_url,int tm_dur, int age_r)
+		public void addChannel(String name,String mrl,String icon_url,int id,String tm_url,int tm_dur, int age_r,int index)
 		{
-			_channels.add(new Channel(name,mrl,icon_url,id,tm_url,tm_dur,age_r));
+			_channels.add(new Channel(name,mrl,icon_url,id,tm_url,tm_dur,age_r,index));
+		}
+		void sortByIndex(){
+			Collections.sort(_channels, new ChannelIndexComparator());
 		}
 	}
 	

@@ -229,7 +229,11 @@ public class VideoApp extends Application {
 		private ChannelsConfig.Topic _cur_topic;
 		private ChannelsConfig.Channel _cur_channel;
 		private UserProfiles _user_prof= new UserProfiles();
-		private TerminalSettings _ts=null;
+		private TerminalSettings _ts;
+		
+		public AppConfig(){
+			_ts=new TerminalSettings();
+		}
 		public void setTerminalSettings(TerminalSettings ts){
 			_ts=ts;
 		}
