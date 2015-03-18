@@ -139,7 +139,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		setContentView(R.layout.activity_main);
 
 		_swipe_detector=new OnSwipeTouchListener(this){
@@ -488,7 +488,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 			refreshChannelsList();
 			ArrayList<ChannelsConfig.Topic> ts=app.getAppConfig().getChannelsConfig().getTopics();
 			_t_adapter.clear();
-			for (int i=1;i<ts.size();++i)
+			for (int i=0;i<ts.size();++i)
 			{
 				_t_adapter.add(new LVTopicItem(ts.get(i),R.layout.topic_item,_top_click));//, 0);
 			}
@@ -516,16 +516,16 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 		adapter.clear();
 		ChannelsConfig.Topic ct=app.getAppConfig().getCurTopic();
 		ArrayList<ChannelsConfig.Topic> allt=app.getAppConfig().getChannelsConfig().getTopics();
-		if (ct.equals(allt.get(0)))
-		{/// if current topic is first topic (all channels topic)
-			for (int i=1;i<allt.size();++i)
+		//if (ct.equals(allt.get(0)))
+		//{/// if current topic is first topic (all channels topic)
+			for (int i=0;i<allt.size();++i)
 			{
 				adapter.add(new LVTopicItem(allt.get(i),R.layout.topic_list_item,null));
 				addTopicChannelsToList(allt.get(i));
 			}
-		}
-		else
-			addTopicChannelsToList(ct);
+		//}
+		//else
+			//addTopicChannelsToList(ct);
 		
 		//Log.d("MAINACT","refreshChannelsList ok");
 		

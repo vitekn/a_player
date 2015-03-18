@@ -372,11 +372,14 @@ public class ChannelsConfig {
 	public void removeEmptyTopics()
 	{
 		Iterator<Topic> i=_topics.iterator();
-		while (i.hasNext()){
-			if (i.next().getChannels().size()==0)
-				i.remove();
-		}
 		
+		while (i.hasNext()){
+			Topic t=i.next();
+			if (t.getChannels().size()==0)
+			{
+				i.remove();
+			}
+		}
 	}
 	
 }

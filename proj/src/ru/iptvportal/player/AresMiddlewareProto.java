@@ -308,19 +308,19 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 					ChannelsConfig chc=new ChannelsConfig();
 					for (int i=0;i<t.length();++i)
 					{
-						//Log.d("PROTO", "parsing one topic");
 						JSONObject to=t.getJSONObject(i);
 						String tname=to.getString("name");
 						String ticon=to.getString("logo");
 						int id=to.getInt("id");
 						JSONArray ji=to.getJSONArray("items");
+						//Log.d("PROTO", "parsing one topic "+tname);
 						
 						chc.addTopic(tname,ticon,id);
 						fillTopic(ch,chc.getTopics().get(chc.getTopics().size()-1),ji);
 					}
 
 					chc.removeEmptyTopics();
-					chc.addCommonTopic("Все");
+			//		chc.addCommonTopic("Все");
 
 					pre.onChannels(chc);
 					
@@ -385,7 +385,7 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 				for (int j=0;j<ml.length();++j)
 				{
 					JSONObject ch=ml.getJSONObject(j);
-					Log.d("PROTO","CHANNEL= "+ch.toString());
+				//	Log.d("PROTO","CHANNEL= "+ch.toString());
 					if (ch.getInt("id")==ch_id)
 					{
 						
@@ -405,7 +405,7 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 							age_r=ch.getInt("age_limit");
 							ind=ch.getInt("index");
 						}catch(Exception e){}
-						Log.d("PROTO","ind="+ind);
+//						Log.d("PROTO","ind="+ind);
 						int id=ch.getInt("channel_id");
 						t.addChannel(n,m,u,id,tm_url,tm_dur,age_r,ind);
 						break;
@@ -417,7 +417,7 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 		{
 			//Log.d("PROTO","exc="+e.toString());
 		}
-		t.sortByIndex();
+//		t.sortByIndex();
 	}
 
 	@Override
