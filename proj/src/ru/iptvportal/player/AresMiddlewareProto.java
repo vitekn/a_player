@@ -24,11 +24,15 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 	private Context _ctx;
 	private String _hw="";
 	private String _host_url="";
+	private String _cur_user_name="";
+	private boolean _anon_reg=false;
 	private ArrayList<ReqRespPair> _req_pairs=new ArrayList<ReqRespPair>();
 	final String _ssl_sert_name="server.crt";
 	
 	public AresMiddlewareProto (Context ctx){_ctx=ctx;}
 
+	public String getCurUserName(){return _cur_user_name;}
+	
 	@Override
 	public MiddlewareProto clone(){ 
 		return new AresMiddlewareProto(_ctx);
@@ -37,6 +41,12 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 	@Override
 	public void authRequest(String id, String pin, String hw,MiddlewareProto.ProtoEvents clb) {
 		_hw=hw;
+		_anon_reg=(id.length()==0 && pin.length()==0);
+		if (_anon_reg)
+		{
+			clb.onLogin(true);
+			return;
+		}
 		//Log.d("PROTO", "AR");
 		String req="{\"jsonrpc\":\"2.0\",\"id\":123,\"method\":\"register_terminal\""
 					+",\"params\"  : "
@@ -55,10 +65,16 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 	public void channelsRequest(String hw,MiddlewareProto.ProtoEvents clb) {
 		_hw=hw;
 		//Log.d("PROTO", "CR");
+		String anon="";
+		if (_anon_reg)
+			anon= " \"anonymous\": true,";
+		//else
+//			anon="\"require_username\": true,";
+		
 		String req="{\"jsonrpc\":\"2.0\",\"id\":123,\"method\":\"login\""
-					+",\"params\"  : {"
+					+",\"params\"  : { \"require_username\": true," + anon
 					+ "\"macaddr\": \""+hw+"\"}}";
-
+		
 		//Log.d("PROTO", req);
 		ReqRespPair rrp=new ReqRespPair();
 		_req_pairs.add(rrp);
@@ -283,14 +299,33 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 				}
 				break;
 			case LOGIN:
+			//	Log.d("PROTO","result: "+result);
 				try {
 					JSONObject object;
 					object = (JSONObject) new JSONTokener(result).nextValue();
-					boolean re = object.getBoolean("result");
+					boolean re=false;
+					try{
+						re = object.getBoolean("result");
+					}
+					catch(JSONException e)
+					{
+						try{
+							JSONObject ro=object.getJSONObject("result");
+							if (ro.isNull("username"))
+								_anon_reg=true;
+							_cur_user_name=object.getJSONObject("result").getString("username");
+							re=true;
+						}
+						catch(JSONException e1)
+						{}
+					}
+					if (_anon_reg)
+						_cur_user_name="anonymous";
 					if (re)
 						playlistRequest(pre);
 					else
 						pre.onChannels(null);
+					
 				} catch (JSONException e) {
 					pre.onChannels(null);
 				}

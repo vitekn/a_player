@@ -48,6 +48,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.Toast;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
@@ -262,7 +263,10 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 
 		if (!app.getAppService().isLoggedIn())
 		{
-			getView(AppViewState.LOGIN).setVisibility(View.VISIBLE);
+			View l=getView(AppViewState.LOGIN);
+			l.setVisibility(View.VISIBLE);
+			TextView t=(TextView)l.findViewById(R.id.loginTitle);
+			t.setText("Вход не выполнен");
 
 			//Log.d("APP","LOGIN" );
 		//	Intent ni=new Intent(this,LoginActivity.class);
@@ -271,7 +275,8 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 		}
 		
 		getView(AppViewState.INTERFACE).setVisibility(View.VISIBLE);
-
+		app.setViewState(AppViewState.INTERFACE, null);
+		
 		if (checkConfig())
 		{
 			_selected_profile=app.getAppConfig().getUserProfiles().getCurrentProfileNum();
@@ -317,6 +322,11 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 		ProgressBar pb=(ProgressBar) findViewById(R.id.loginprogressBarEPG);
 		pb.setVisibility(View.VISIBLE);
 		
+	}
+	
+	public void onShowSettings (View v)
+	{
+		showSettingsDialog();
 	}
 	
 	@Override 
@@ -404,6 +414,9 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 	{
 		switch(mi.getItemId())
 		{
+			case R.id.item1:
+				app.setViewState(AppViewState.LOGIN, null);
+				break;
 			case R.id.item2:
 				_profile_pass_ok=false;
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -423,49 +436,75 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 
 				break;
 			case R.id.item3:
-
-				AlertDialog ad=createCustomDialog(R.string.udp_proxy_dialog_title,R.string.ok_button_title,R.layout.terminal_settings,
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int which) {
-								AlertDialog ad=(AlertDialog)dialog;
-								String p=((EditText) ad.findViewById(R.id.udp_proxy)).getText().toString();
-								String p_url=((EditText) ad.findViewById(R.id.portal_url)).getText().toString();
-								boolean u=((ToggleButton) ad.findViewById(R.id.use_proxy)).isChecked();
-								//Log.d("MAINACT","saving prefs"+u);
-								
-								if (p_url.compareTo(app.getAppService().getPortalUrl())!=0 || p.compareTo(app.getAppConfig().getTerminalSettings().getUdpProxy())!=0 || u!=app.getAppConfig().getTerminalSettings().isUdpProxyUsed())
-								{
-									app.getAppConfig().getTerminalSettings().setUdpProxy(p);
-									app.getAppConfig().getTerminalSettings().setUdpProxyUsed(u);
-									app.getAppService().setPortalUrl(p_url);
-									app.getAppService().saveTerminalSettings();
-									SharedPreferences sp= PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-									SharedPreferences.Editor ped=sp.edit();
-									ped.putString("url_portal", p_url);
-									boolean cr=ped.commit();
-								//	Log.d("MAINACT","saving prefs"+cr);
-									
-								}
-							}
-						});
-				ad.show();
-				((ToggleButton)ad.findViewById(R.id.use_proxy)).setChecked(app.getAppConfig().getTerminalSettings().isUdpProxyUsed());
-				((EditText)ad.findViewById(R.id.udp_proxy)).setText(app.getAppConfig().getTerminalSettings().getUdpProxy());
-				((EditText)ad.findViewById(R.id.portal_url)).setText(app.getAppService().getPortalUrl());
+					showSettingsDialog();
 				break;
 			default:
 				break;
 		}
 		return true;
 	}
+	public void applySettings(View button)
+	{
+		_applySettings(button.getRootView());
+	}
+	void _applySettings(View host)
+	{
+		Spinner psp=(Spinner) host.findViewById(R.id.user_profile_selector);
+		if (psp!=null)
+		{
+			int sp=psp.getSelectedItemPosition();
+			if (sp!=Spinner.INVALID_POSITION && _selected_profile!=sp)
+			{
+				_selected_profile=sp;
+				changeProfile();
+			}
+		}
+		String p=((EditText) host.findViewById(R.id.udp_proxy)).getText().toString();
+		String p_url=((EditText) host.findViewById(R.id.portal_url)).getText().toString();
+		boolean u=((Switch) host.findViewById(R.id.use_proxy)).isChecked();
+		if (p_url.compareTo(app.getAppService().getPortalUrl())!=0 || p.compareTo(app.getAppConfig().getTerminalSettings().getUdpProxy())!=0 || u!=app.getAppConfig().getTerminalSettings().isUdpProxyUsed())
+		{
+			app.getAppConfig().getTerminalSettings().setUdpProxy(p);
+			app.getAppConfig().getTerminalSettings().setUdpProxyUsed(u);
+			app.getAppService().setPortalUrl(p_url);
+			app.getAppService().saveTerminalSettings();
+			SharedPreferences sp= PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+			SharedPreferences.Editor ped=sp.edit();
+			ped.putString("url_portal", p_url);
+			boolean cr=ped.commit();
+		}
+		
+	}
 	
+	void fillSettingsView(View parent)
+	{
+		Spinner psp=(Spinner) parent.findViewById(R.id.user_profile_selector);
+		if (psp!=null)
+				psp.setSelection(_selected_profile);
+		((Switch)parent.findViewById(R.id.use_proxy)).setChecked(app.getAppConfig().getTerminalSettings().isUdpProxyUsed());
+		((EditText)parent.findViewById(R.id.udp_proxy)).setText(app.getAppConfig().getTerminalSettings().getUdpProxy());
+		((EditText)parent.findViewById(R.id.portal_url)).setText(app.getAppService().getPortalUrl());
+	}
+	
+	void showSettingsDialog()
+	{
+		AlertDialog ad=createCustomDialog(R.string.udp_proxy_dialog_title,R.string.ok_button_title,R.layout.terminal_settings,
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						_applySettings(((AlertDialog)dialog).findViewById(R.id.terminal_settings_l));						
+					}
+				});
+		ad.show();
+		fillSettingsView(ad.findViewById(R.id.terminal_settings_l));
+
+	}	
 	private boolean checkConfig()
 	{
 		if (app.getAppConfig().getChannelsConfig()==null)
 		{
 			if (!app.getAppService().isConfigLoading())
-				app.getAppService().loadTerminalSettings(this);
+				app.getAppService().loadConfig(this);
 			return false;
 		}
 		return true;
@@ -477,9 +516,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 		vv.release();
 		super.onBackPressed();	
 	}
-	
-	
-	
+		
 	private void initData()
 	{
 		if (!_data_ok)
@@ -503,7 +540,6 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 		}
 	}
 
-	
 	private void setCurrentChannelName()
 	{
 		TextView tv = (TextView)findViewById(R.id.currentChannel);
@@ -881,6 +917,20 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 				findViewById(R.id.player_ctl_l).setVisibility(View.VISIBLE);
 
 		//}
+	}
+	@Override
+	public void onViewLogin(AppViewState from,Animation a)
+	{
+		animateTransaction(R.id.login_l,from,null);
+		View l=findViewById(R.id.login_l);
+		TextView t=(TextView)l.findViewById(R.id.loginTitle);
+		if (app.getAppService().isLoggedIn())
+			t.setText("Вход выполнен под именем "+app.getAppService().getCurrentUserName());
+		else
+			t.setText("Вход не выполнен.");
+		fillSettingsView(l);
+		l.setVisibility(View.VISIBLE);
+	
 	}
 	
 }

@@ -32,6 +32,7 @@ public class VideoApp extends Application {
 			return _prot;
 		}
 		public boolean isLoggedIn(){return _logged_in;}
+		public String getCurrentUserName(){ return _prot.getCurUserName();}
 		public void login(Activity r_act, String id,String pin){
 			String hw=getHW();
 			//Log.d("HW","mac="+hw);
@@ -39,7 +40,7 @@ public class VideoApp extends Application {
 			_prot.authRequest(id, pin, hw,this);
 			//Log.d("AppService","logging in");
 		}
-		private void loadConfig(Activity r_act)
+		public void loadConfig(Activity r_act)
 		{
 			_config_loading=true;
 			_r_act=r_act;
@@ -52,7 +53,7 @@ public class VideoApp extends Application {
 			_prot.profilesRequest(getHW(),this);
 			
 		}
-		public void loadTerminalSettings(Activity r_act)
+		private void loadTerminalSettings(Activity r_act)
 		{
 			_config_loading=true;
 			_r_act=r_act;
@@ -84,6 +85,7 @@ public class VideoApp extends Application {
 		@Override
 		public void onLogin(boolean r) {
 			_logged_in=r;
+			resetConfig();
 			_r_act.recreate();
 		}
 		@Override
@@ -93,14 +95,12 @@ public class VideoApp extends Application {
 			if (_logged_in)
 			{
 				getAppConfig().getUserProfiles().setProfiles(pd,getAppConfig().getTerminalSettings());
-				loadConfig(_r_act);
+			//	loadConfig(_r_act);
 			}
-			else
-			{
-				_config_loading=false;
-				_r_act.recreate();
-			}
-				
+
+			_config_loading=false;
+			_r_act.recreate();
+			
 		}
 		@Override 
 		public void onTerminalSettingsLoaded(TerminalSettings ts) {
@@ -130,11 +130,15 @@ public class VideoApp extends Application {
 				ac.setChannelsConfig(ch_conf);
 				ac.setCurTopic(ch_conf.getTopics().get(0));
 				ac.setCurChannel(ac.getCurTopic().getChannels().get(0));
-//				loadProfiles(_r_act);
+				loadTerminalSettings(_r_act);
 				
 			}
-			_config_loading=false;
-			_r_act.recreate();
+			else
+			{
+				_config_loading=false;
+				_r_act.recreate();
+			}
+			
 		}
 		@Override
 		public void onEPGUploaded(Channel ch) {
@@ -232,8 +236,17 @@ public class VideoApp extends Application {
 		private TerminalSettings _ts;
 		
 		public AppConfig(){
-			_ts=new TerminalSettings();
+			reset();
 		}
+		protected void reset() {
+			
+			_ch_conf=null;
+			_user_prof= new UserProfiles();
+			_ts=new TerminalSettings();
+			
+		}
+		
+		
 		public void setTerminalSettings(TerminalSettings ts){
 			_ts=ts;
 		}
@@ -295,6 +308,9 @@ public class VideoApp extends Application {
 				case VIDEO:
 					_vmng.onViewVideo(old,a);
 					break;
+				case LOGIN:
+					_vmng.onViewLogin(old, a);
+					break;
 			}
 		}
 	public VlcPlayer getVideoPlayer() {
@@ -303,6 +319,6 @@ public class VideoApp extends Application {
 	public void setVideoPlayer(VlcPlayer _video_player) {
 		this._video_player = _video_player;
 	}
-	
+	protected void resetConfig(){_app_conf.reset();}
 	
 }

@@ -19,5 +19,5 @@ public interface ViewManager {
 	public void onViewInterface(AppViewState from,Animation a);
 	public void onViewEpg(AppViewState from,Animation a);
 	public void onViewVideo(AppViewState from,Animation a);
-	
+	public void onViewLogin(AppViewState from,Animation a);
 }

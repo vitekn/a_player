@@ -21,5 +21,8 @@
     <string name="udp_proxy_enable_on">Прокси используется</string>
     <string name="udp_proxy_enable_off">Прокси выключен</string>
     <string name="portal_url">URL портала</string>
-    
+    <string-array name="user_profiles_names">
+		<item>0+</item>
+		<item>18+</item>
+	</string-array>
 </resources>

@@ -30,6 +30,7 @@ public interface MiddlewareProto {
 		public int getId(){return _rrid;}
 	} 
 	public MiddlewareProto clone(); 
+	public String getCurUserName();
 	public void authRequest(String id,String pin,String hw,MiddlewareProto.ProtoEvents clb);
 	public void channelsRequest(String hw,MiddlewareProto.ProtoEvents clb);
 	public void epgRequest(ChannelsConfig.Channel ch,Date from,Date to,MiddlewareProto.ProtoEvents clb);
