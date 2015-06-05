@@ -168,6 +168,8 @@
 	    android:id="@+id/login_l"
 	        android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:background="#000000"
+            android:alpha="0.75"
             >
 		<RelativeLayout 
 	    android:layout_width="fill_parent"
@@ -201,12 +203,15 @@
         
     <EditText
         android:id="@+id/logineditText1"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/logintextView1"
         android:layout_centerHorizontal="true"
-        android:textColor="#f0f0f0"
-        android:ems="10" >        
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:ems="10"
+        android:textColor="#f0f0f0" >
+        
         <requestFocus />
     </EditText>
         
@@ -245,12 +250,13 @@
 	    android:textSize="15sp" />
 
 	    	<ru.iptvportal.player.ExpandablePanel 
-	        android:layout_width="fill_parent"
+	        android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/logineditText2"
 	        android:layout_below="@+id/loginbutton1"
             android:orientation="vertical" 
 		    android:layout_marginTop="15dp"
+    	    android:layout_marginRight="30dp"
            	iptvportal:collapsedHeight="5dip"
            	iptvportal:handle="@+id/extraSettings" 
            	iptvportal:content="@+id/loginSettingsButton" >
@@ -270,7 +276,7 @@
 
          <LinearLayout
              android:id="@+id/loginSettingsButton"
-             android:layout_width="wrap_content"
+             android:layout_width="fill_parent"
              android:layout_height="wrap_content"
              android:layout_below="@+id/extraSettings"
              android:layout_gravity="left"
@@ -278,11 +284,11 @@
              android:orientation="vertical"
              android:visibility="gone" >
 
-        	 <include  	android:layout_width="wrap_content"
+        	 <include  	android:layout_width="fill_parent"
         				android:layout_height="wrap_content"
         				android:textColor="#f0f0f0"
         				layout="@layout/user_profile"/>			
-             <include  	android:layout_width="wrap_content"
+             <include  	android:layout_width="fill_parent"
         				android:layout_height="wrap_content"
         				android:textColor="#f0f0f0"
         				layout="@layout/terminal_settings"/>			

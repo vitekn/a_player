@@ -158,7 +158,8 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 				Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 				
 				v.vibrate(300);
-				openOptionsMenu();
+				app.setViewState(AppViewState.LOGIN, null);
+//				openOptionsMenu();
 			}
 		};
 		_leftout_anim=AnimationUtils.loadAnimation(getApplicationContext(), R.animator.leftout_anim);
@@ -459,8 +460,8 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 				changeProfile();
 			}
 		}
-		String p=((EditText) host.findViewById(R.id.udp_proxy)).getText().toString();
-		String p_url=((EditText) host.findViewById(R.id.portal_url)).getText().toString();
+		String p="http://"+((EditText) host.findViewById(R.id.udp_proxy)).getText().toString();
+		String p_url="https://"+((EditText) host.findViewById(R.id.portal_url)).getText().toString();
 		boolean u=((Switch) host.findViewById(R.id.use_proxy)).isChecked();
 		if (p_url.compareTo(app.getAppService().getPortalUrl())!=0 || p.compareTo(app.getAppConfig().getTerminalSettings().getUdpProxy())!=0 || u!=app.getAppConfig().getTerminalSettings().isUdpProxyUsed())
 		{
@@ -482,8 +483,8 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 		if (psp!=null)
 				psp.setSelection(_selected_profile);
 		((Switch)parent.findViewById(R.id.use_proxy)).setChecked(app.getAppConfig().getTerminalSettings().isUdpProxyUsed());
-		((EditText)parent.findViewById(R.id.udp_proxy)).setText(app.getAppConfig().getTerminalSettings().getUdpProxy());
-		((EditText)parent.findViewById(R.id.portal_url)).setText(app.getAppService().getPortalUrl());
+		((EditText)parent.findViewById(R.id.udp_proxy)).setText(app.getAppConfig().getTerminalSettings().getUdpProxy().replace("http://", ""));
+		((EditText)parent.findViewById(R.id.portal_url)).setText(app.getAppService().getPortalUrl().replace("https://", ""));
 	}
 	
 	void showSettingsDialog()
