@@ -75,6 +75,7 @@ public class LibVLC {
     private float[] equalizer = null;
     private boolean frameSkip = false;
     private int networkCaching = 0;
+    private boolean httpReconnect = false;
 
     /** Path of application-specific cache */
     private String mCachePath = "";
@@ -170,7 +171,7 @@ public class LibVLC {
     @Override
     protected void finalize() {
         if (mLibVlcInstance != 0) {
-            //Log.d(TAG, "LibVLC is was destroyed yet before finalize()");
+            Log.d(TAG, "LibVLC is was destroyed yet before finalize()");
             destroy();
         }
     }
@@ -310,7 +311,7 @@ public class LibVLC {
                 ret = 1;
             else if(m.bogoMIPS >= 1200 && m.processors > 2) {
                 ret = 1;
-                //Log.d(TAG, "Used bogoMIPS due to lack of frequency info");
+                Log.d(TAG, "Used bogoMIPS due to lack of frequency info");
             } else
                 ret = 3;
         } else if(deblocking > 4) { // sanity check
@@ -372,6 +373,14 @@ public class LibVLC {
         this.networkCaching = networkcaching;
     }
 
+    public boolean getHttpReconnect() {
+        return httpReconnect;
+    }
+
+    public void setHttpReconnect(boolean httpReconnect) {
+        this.httpReconnect = httpReconnect;
+    }
+
     /**
      * Initialize the libVLC class.
      *
@@ -413,7 +422,7 @@ public class LibVLC {
      * This function is called by the native code
      */
     public void initAout(int sampleRateInHz, int channels, int samples) {
-        //Log.d(TAG, "Opening the java audio output");
+        Log.d(TAG, "Opening the java audio output");
         mAout.init(sampleRateInHz, channels, samples);
     }
 
@@ -430,7 +439,7 @@ public class LibVLC {
      * This function is called by the native code
      */
     public void pauseAout() {
-        //Log.d(TAG, "Pausing the java audio output");
+        Log.d(TAG, "Pausing the java audio output");
         mAout.pause();
     }
 
@@ -439,7 +448,7 @@ public class LibVLC {
      * This function is called by the native code
      */
     public void closeAout() {
-        //Log.d(TAG, "Closing the java audio output");
+        Log.d(TAG, "Closing the java audio output");
         mAout.release();
     }
 
@@ -733,5 +742,5 @@ public class LibVLC {
     public native void setTitle(int title);
     public native int getChapterCountForTitle(int title);
     public native int getTitleCount();
-
+    public native void setArescryptAuthUri (String uri);
 }

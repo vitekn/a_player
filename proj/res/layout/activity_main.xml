@@ -150,6 +150,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:contentDescription="@string/app_name"
+            android:src="@drawable/pause_icon"
             android:onClick="toggleInterface" />
 
 	     <SeekBar

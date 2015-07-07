@@ -186,7 +186,12 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 		plb.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
+				ImageButton b=(ImageButton) arg0;
 				vv.togglePause();
+				if (vv.isPaused())
+					b.setImageResource(R.drawable.play_icon);
+				else
+					b.setImageResource(R.drawable.pause_icon);
 			}
 		});
 		_player_pb=(SeekBar)findViewById(R.id.player_bar);

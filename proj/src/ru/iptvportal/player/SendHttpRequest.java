@@ -133,13 +133,14 @@ public class SendHttpRequest extends AsyncTask<String,Integer,SendHttpRequest.Ra
 				return rre;
 			}
 		// Create a TrustManager that trusts the CAs in our KeyStore
+	
 		try {
 			
 			
 			urlConnection.setRequestMethod(method);
 			if (method.equalsIgnoreCase("POST"))
 			{
-				//Log.d("HTTP","POST Data="+data);
+				//Log.d("PROTO","POST Data= "+data);
 				urlConnection.setDoOutput(true);
 				urlConnection.setDoInput(true);
 				urlConnection.connect();
@@ -156,10 +157,13 @@ public class SendHttpRequest extends AsyncTask<String,Integer,SendHttpRequest.Ra
 			ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
 			int nRead;
-			byte[] bdata = new byte[16384*4];
+			byte[] bdata = new byte[1024];
 
-			while ((nRead = in.read(bdata, 0, bdata.length)) != -1) {
+			//while (urlConnection);
+			while ((nRead = in.read(bdata)) != -1) {
 			  buffer.write(bdata, 0, nRead);
+			  // Log.d("PROTO","readed:" + nRead + " CL= " + urlConnection.getContentLength() + new String(bdata));
+			  // for (int i=0;i < 1024;++i) bdata[i]='+';
 			}
 
 			buffer.flush();

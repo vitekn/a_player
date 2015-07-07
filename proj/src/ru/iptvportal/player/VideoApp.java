@@ -161,7 +161,8 @@ public class VideoApp extends Application {
 		public void setPortalUrl(String _portal_url) {
 			this._portal_url = _portal_url;
 			_prot.setUrl(_portal_url);
-
+	        if (_video_player!=null)
+	        	_video_player.setCasPortal(_portal_url);
 		}
 	}
 	
@@ -282,7 +283,7 @@ public class VideoApp extends Application {
 	private ViewManager _vmng=null;
 	private AppService _app_serv = new AppService(new AresMiddlewareProto(this));
 	private AppConfig _app_conf=new AppConfig(); 
-	private VlcPlayer _video_player;
+	private VlcPlayer _video_player=null;
 	//public String getSomeString(){return "123";}
 	//public void setCurrentMedia(String m){_current_media=m;}
 	//public String getCurrentMedia(){return _current_media;}
@@ -318,6 +319,8 @@ public class VideoApp extends Application {
 	}
 	public void setVideoPlayer(VlcPlayer _video_player) {
 		this._video_player = _video_player;
+        if (_video_player!=null)
+        	_video_player.setCasPortal(getAppService()._portal_url);
 	}
 	protected void resetConfig(){_app_conf.reset();}
 	

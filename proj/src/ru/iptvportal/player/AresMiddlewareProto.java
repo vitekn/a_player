@@ -228,11 +228,11 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 		
 		//result=new Scanner(result).useDelimiter("\\A").next();
 		ReqRespPair rrp=findRRP(rid);
-		//Log.d("PROTO","RESPONSE= "+result+" =END " +rrp );
+		//Log.d("PROTO","RESPONSE length= "+result.length());
 		if (rrp!=null)
 		{
 			MiddlewareProto.ProtoEvents pre=rrp.clb;
-			////Log.d("PROTO","RESP= "+result);
+			//Log.d("PROTO","RESP= "+result);
 			switch (rrp.req_data.getType())
 			{
 			case UPDATE_PROFILE:
@@ -338,6 +338,9 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 					object = (JSONObject) new JSONTokener(result).nextValue();
 					object = object.getJSONObject("result");
 					JSONArray ch=object.getJSONArray("medialist");
+					//Log.d("PROTO"," ML >>>>: " + ch.toString());
+					//for (int i=0;i<ch.length();++i)
+					//	Log.d("PROTO","channel: "+ ch.getJSONObject(i).toString());
 					JSONArray t=object.getJSONArray("playlists");
 					
 					ChannelsConfig chc=new ChannelsConfig();
@@ -360,6 +363,7 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 					pre.onChannels(chc);
 					
 				} catch (JSONException e) {
+//					Log.d("PROTO","channel parser" + e.toString());
 					pre.onChannels(null);
 				}
 				
@@ -413,17 +417,18 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 	{
 		try{
 			//Log.d("PROTO", "fillTopic");
+			
 			for (int i=0;i<items.length();++i)
 			{
 				int ch_id=items.getInt(i);
-				
+				boolean added=false;
 				for (int j=0;j<ml.length();++j)
 				{
 					JSONObject ch=ml.getJSONObject(j);
 				//	Log.d("PROTO","CHANNEL= "+ch.toString());
 					if (ch.getInt("id")==ch_id)
 					{
-						
+						added=true;
 						String n=ch.getString("name");
 						String m=ch.getString("mrl");
 						String u=ch.getString("logo");
@@ -441,16 +446,21 @@ public class AresMiddlewareProto  implements MiddlewareProto,OnHttpRequestComple
 							ind=ch.getInt("index");
 						}catch(Exception e){}
 //						Log.d("PROTO","ind="+ind);
-						int id=ch.getInt("channel_id");
+						int id=0;
+						try{	
+							id=ch.getInt("channel_id");
+						} catch(Exception e){}
+						
 						t.addChannel(n,m,u,id,tm_url,tm_dur,age_r,ind);
 						break;
 					}
 				}
+				//if (!added) Log.d("PROTO","miss channel " + ch_id + " in topic "+ t.getName());
 			}
 		}
 		catch(Exception e)
 		{
-			//Log.d("PROTO","exc="+e.toString());
+		//	Log.d("PROTO","exc="+e.toString());
 		}
 //		t.sortByIndex();
 	}

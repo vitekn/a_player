@@ -48,42 +48,33 @@ public class VlcPlayer implements SurfaceHolder.Callback,IVideoPlayer {
 		_holder = _surface.getHolder();
         _holder.addCallback(this);
         _act=act;
-        try{
-        //Log.d("VLCPLAYER","svu gi");
+        try{ 
         _libvlc = LibVLC.getInstance();
-        //Log.d("VLCPLAYER","svu ha");
         _libvlc.setHardwareAcceleration(LibVLC.HW_ACCELERATION_FULL);
-        //Log.d("VLCPLAYER","svu st");
         _libvlc.setSubtitlesEncoding("");
-        //Log.d("VLCPLAYER","svu aout");
         _libvlc.setAout(LibVLC.AOUT_OPENSLES);
-        //Log.d("VLCPLAYER","svu ts");
 //        _libvlc.setTimeStretching(true);
-        //Log.d("VLCPLAYER","svu hr");
         _libvlc.setChroma("RV32");
-        //Log.d("VLCPLAYER","svu vm");
         _libvlc.setVerboseMode(false);
-        //Log.d("VLCPLAYER","svu rest");
-        //_libvlc.init(_surface.getContext());
-        LibVLC.restart(_surface.getContext());
-        //Log.d("VLCPLAYER","svu addh");
+        _libvlc.init(_surface.getContext());
+        //LibVLC.restart(_surface.getContext());
         EventHandler.getInstance().addHandler(mHandler);
-        //Log.d("VLCPLAYER","svu setpf");
         _holder.setFormat(PixelFormat.RGBX_8888);
-        //Log.d("VLCPLAYER","svu kons");
         _holder.setKeepScreenOn(true);
-        //Log.d("VLCPLAYER","svu ml");
         }
         catch(Exception e){}
-        //Log.d("VLCPLAYER","constr");
 	}
-
+	public void setCasPortal(String url)
+	{
+        _libvlc.setArescryptAuthUri(url+"/ca/");
+	}
+	
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {}
 
 	@Override
 	public void surfaceChanged(SurfaceHolder surfaceholder, int format,int width, int height) {
-        //Log.d("VLCPLAYER","sch");
+     //   Log.d("VLCPLAYER","sch");
 		if (_libvlc != null)
 			_libvlc.attachSurface(_holder.getSurface(), this);
 	}
@@ -92,7 +83,7 @@ public class VlcPlayer implements SurfaceHolder.Callback,IVideoPlayer {
 	public void surfaceDestroyed(SurfaceHolder surfaceholder) {}
 
     private void setSize(int width, int height) {
-        //Log.d("VLCPLAYER","ss");
+      //  Log.d("VLCPLAYER","ss");
         _videoWidth = width;
         _videoHeight = height;
         if (_videoWidth *_videoHeight <= 1)
@@ -131,23 +122,23 @@ public class VlcPlayer implements SurfaceHolder.Callback,IVideoPlayer {
         lp.height = h;
         _surface.setLayoutParams(lp);
         _surface.invalidate();
-        //Log.d("VLCPLAYER","ss ok");
+       // Log.d("VLCPLAYER","ss ok");
 
     }
     
     @Override
     public void setSurfaceSize(int width, int height, int visible_width,
             int visible_height, int sar_num, int sar_den) {
-        //Log.d("VLCPLAYER","sss");
+      //  Log.d("VLCPLAYER","sss");
         Message msg = Message.obtain(mHandler, VideoSizeChanged, width, height);
         msg.sendToTarget();
-        //Log.d("VLCPLAYER","sss ok");
+       // Log.d("VLCPLAYER","sss ok");
     }
     
     public void setVideoURI(Uri um) {
         //release();
         String media=um.toString();
-        //Log.d("VLCPLAYER","svu "+media);
+      //  Log.d("VLCPLAYER","svu "+media);
         _is_paused=false;
 		_pause_time=null;
 		_pause_duration=0;
@@ -159,7 +150,7 @@ public class VlcPlayer implements SurfaceHolder.Callback,IVideoPlayer {
         } catch (Exception e) {
             //Toast.makeText(this, "Error creating player!", Toast.LENGTH_LONG).show();
         }
-        //Log.d("VLCPLAYER","svu ok");
+       // Log.d("VLCPLAYER","svu ok");
     }
     public void setPosition(float pos)
     {
@@ -203,6 +194,9 @@ public class VlcPlayer implements SurfaceHolder.Callback,IVideoPlayer {
     		_libvlc.play();
     	}
     }
+    public boolean isPaused() {return _is_paused;}
+    
+    
     public void stop()
     {
 		_pause_time=null;
@@ -212,13 +206,13 @@ public class VlcPlayer implements SurfaceHolder.Callback,IVideoPlayer {
     }
     
     public void start(){
-        //Log.d("VLCPLAYER","st");
+ //       Log.d("VLCPLAYER","st");
         //if (_libvlc!=null)
         	//_libvlc.playIndex(0);
-        //Log.d("VLCPLAYER","st ok");
+   //     Log.d("VLCPLAYER","st ok");
     }
     public void release() {
-        //Log.d("VLCPLAYER","r");
+     //   Log.d("VLCPLAYER","r");
         if (_libvlc == null)
             return;
         EventHandler.getInstance().removeHandler(mHandler);
@@ -231,7 +225,7 @@ public class VlcPlayer implements SurfaceHolder.Callback,IVideoPlayer {
 
         _videoWidth = 0;
         _videoHeight = 0;
-        //Log.d("VLCPLAYER","rok");
+     //   Log.d("VLCPLAYER","rok");
     }
     
 	private Handler mHandler = new MyHandler(this);
@@ -250,7 +244,7 @@ public class VlcPlayer implements SurfaceHolder.Callback,IVideoPlayer {
             // SamplePlayer events
             if (msg.what == VideoSizeChanged) {
                 player.setSize(msg.arg1, msg.arg2);
-                //Log.d("VLCPLAYER","hm ok1");
+               // Log.d("VLCPLAYER","hm ok1");
                 return;
             }
 
