@@ -169,7 +169,7 @@ public class VideoApp extends Application {
 	class AppConfig {
 		class UserProfiles
 		{
-			private ProfilesData _pd=null;
+			private ProfilesData _pd=new ProfilesData();
 			private int _cur_prof=0;
 			public void setProfiles(ProfilesData pd,TerminalSettings ts)
 			{
@@ -203,7 +203,7 @@ public class VideoApp extends Application {
 			}
 			public boolean isPassCorrect(int pid,String pass)
 			{
-				String p=_pd.getProfile(pid).getPassword();
+				String p= _pd.getProfile(pid).getPassword();
 				if (p==null)
 					return false;
 				return pass.compareTo(p)==0;

@@ -167,6 +167,11 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 		_fadein_anim=AnimationUtils.loadAnimation(getApplicationContext(), R.animator.fadein_anim);
 		
 		app= (VideoApp)this.getApplication();
+
+		SurfaceView sv= (SurfaceView) findViewById(R.id.videoView1);
+		vv=new VlcPlayer(sv,this);
+		app.setVideoPlayer(vv);
+		
 		app.getAppService().setPortalUrl(PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString("url_portal", "https://go.iptvportal.ru"));
 		app.setViewManager(this);
 		//Log.d("MAINACT","START" + app.getAppConfig().getChannelsConfig());
@@ -210,9 +215,6 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 			}
 			
 		});
-		SurfaceView sv= (SurfaceView) findViewById(R.id.videoView1);
-		vv=new VlcPlayer(sv,this);
-		app.setVideoPlayer(vv);
 /*		vv.setPlayerEventsListener(new VlcPlayer.PlayerEventsListener(){
 			@Override
 			public void onPositionChanged() {
