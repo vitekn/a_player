@@ -1,0 +1,323 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:iptvportal="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ma_rel_l"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#000000"
+    tools:context="${packageName}.${activityClass}" >
+    
+    <SurfaceView
+        android:id="@+id/videoView1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"/>
+	
+	<RelativeLayout 
+	    android:id="@+id/interface_l"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+	 >
+    
+	    <RelativeLayout
+	        android:id="@+id/actionBar"
+	        android:layout_width="fill_parent"
+	        android:layout_height="40dp"
+	        android:layout_alignParentLeft="true"
+	        android:layout_alignParentRight="true"
+	        android:layout_alignParentTop="true"
+	        android:layout_marginBottom="10dp"
+	        android:layout_marginTop="0dp"
+	        android:background="#80000000" >
+
+	        <SearchView
+	            android:id="@+id/channelSearch"
+				android:imeOptions="flagNoExtractUi"
+	            android:layout_width="170dp"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentRight="true"
+	            android:layout_gravity="right"
+	            android:ems="10"
+	            android:inputType="text"
+	            android:textColor="#f0f0f0" 
+	            android:textSize="20sp" 
+	            />
+        
+	        <TextView
+	            android:id="@+id/currentChannel"
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_marginLeft="10dp"
+	            android:layout_marginRight="10dp"
+	            android:layout_alignParentLeft="true"
+	            android:layout_alignParentTop="true"
+	            android:text=""
+	            android:textColor="#f0f0f0"
+	            android:textSize="30sp" />
+	<!--             android:layout_toLeftOf="@id/channelSearch"
+	            android:layout_toRightOf="@id/epgButton" -->
+        
+	    </RelativeLayout>
+        
+	    <ListView
+	        android:id="@+id/topicList"
+	        android:layout_width="80dp"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:layout_below="@id/actionBar"
+	        android:layout_centerVertical="false"
+	        android:background="@drawable/spinner_grad"
+	        android:choiceMode="singleChoice"
+	        android:popupBackground="#202020" />
+	
+	    <ListView
+	        android:id="@+id/listView1"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentBottom="true"
+	        android:layout_alignTop="@id/topicList"
+	        android:layout_marginLeft="10dp"
+	        android:layout_toRightOf="@id/topicList"
+	        android:choiceMode="singleChoice"
+	        android:divider="@drawable/divider_grad"
+	        android:dividerHeight="2dp" >
+	
+	    </ListView>
+
+	</RelativeLayout>
+	<RelativeLayout 
+	    android:id="@+id/epg_l"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+	 >
+
+        <Spinner
+            android:id="@+id/epg_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:alpha="0.75"
+            android:background="#000000"
+            android:popupBackground="#202020" />
+
+
+	    <ListView
+	        android:id="@+id/epg_listView"
+	        android:layout_width="fill_parent"
+	        android:layout_height="fill_parent"
+	        android:layout_alignParentLeft="true"
+	        android:layout_below="@+id/epg_spinner"
+	        android:background="#000000"
+	        android:divider="@drawable/divider_grad"
+	        android:dividerHeight="2dp"
+	        android:alpha="0.75" >
+	    </ListView>
+    	
+    	<ProgressBar
+    	    android:id="@+id/progressEpgLoading"
+    	    style="?android:attr/progressBarStyleLarge"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:layout_centerHorizontal="true"
+    	    android:layout_centerVertical="true"
+    	    android:layout_marginRight="10dp" />
+	    
+	    
+	</RelativeLayout>
+	<RelativeLayout 
+	    android:id="@+id/player_ctl_l"
+	    android:layout_width="fill_parent"
+	    android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+	 >
+    
+        <ImageButton
+            android:id="@+id/player_play"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/pause_icon"
+            android:onClick="toggleInterface" />
+
+	     <SeekBar
+	         android:id="@+id/player_bar"
+	         style="?android:attr/progressBarStyleHorizontal"
+	         android:layout_width="fill_parent"
+	         android:layout_height="wrap_content"
+	         android:layout_centerVertical="true"
+	         android:layout_marginLeft="10dp"
+	         android:layout_marginRight="10dp"
+	         android:layout_toRightOf="@id/player_play" />
+        	    
+	</RelativeLayout>
+	
+	<ScrollView
+	    android:id="@+id/login_l"
+	        android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#000000"
+            android:alpha="0.75"
+            >
+		<RelativeLayout 
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+	 >
+	    	     
+    <TextView
+        android:id="@+id/loginTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/logineditText1"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="5dp"
+        android:text="Вход не выполнен."
+        android:textColor="#f0f0f0"
+        android:textSize="15sp" />
+    
+	    <TextView
+	        android:id="@+id/logintextView1"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignLeft="@+id/logineditText1"
+	        android:layout_below="@id/loginTitle"
+	        android:layout_marginTop="7dp"
+	        android:text="Login"
+	        android:textColor="#f0f0f0"
+	        android:textSize="15sp" />
+        
+    <EditText
+        android:id="@+id/logineditText1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/logintextView1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:ems="10"
+        android:textColor="#f0f0f0" >
+        
+        <requestFocus />
+    </EditText>
+        
+    <TextView
+        android:id="@+id/logintextView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/logineditText1"
+        android:layout_below="@+id/logineditText1"
+        android:layout_marginTop="20dp"
+        android:text="Password"
+        android:textColor="#f0f0f0"
+        android:textSize="15sp" />
+    
+    <EditText
+        android:id="@+id/logineditText2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/logintextView2"
+        android:layout_below="@+id/logintextView2"
+        android:ems="10"
+        android:textColor="#f0f0f0"
+        android:inputType="textPassword" />
+
+	<Button
+	    android:id="@+id/loginbutton1"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignLeft="@+id/logineditText2"
+	    android:layout_alignRight="@+id/logineditText1"
+	    android:layout_below="@+id/logineditText2"
+	    android:layout_marginTop="5dp"
+	    android:onClick="onSubmitLogin"
+	    android:text="OK"
+	    android:textColor="#f0f0f0"
+	    android:textSize="15sp" />
+
+	    	<ru.iptvportal.player.ExpandablePanel 
+	        android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/logineditText2"
+	        android:layout_below="@+id/loginbutton1"
+            android:orientation="vertical" 
+		    android:layout_marginTop="15dp"
+    	    android:layout_marginRight="30dp"
+           	iptvportal:collapsedHeight="5dip"
+           	iptvportal:handle="@+id/extraSettings" 
+           	iptvportal:content="@+id/loginSettingsButton" >
+        
+				 <RelativeLayout
+					 android:layout_width="fill_parent"
+					 android:layout_height="wrap_content">
+
+						<TextView
+							android:id="@+id/extraSettings"
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:layout_alignParentTop="true"
+							android:text="Дополнительные настройки"
+							android:textColor="#f0f0f0"
+							android:textSize="16sp" />
+
+					 <LinearLayout
+						 android:id="@+id/loginSettingsButton"
+						 android:layout_width="fill_parent"
+						 android:layout_height="wrap_content"
+						 android:layout_below="@+id/extraSettings"
+						 android:layout_gravity="left"
+						 android:layout_marginTop="10dp"
+						 android:orientation="vertical"
+						 android:visibility="gone" >
+
+						 <include  	android:layout_width="fill_parent"
+									android:layout_height="wrap_content"
+									android:textColor="#f0f0f0"
+									layout="@layout/user_profile"/>
+						 <include  	android:layout_width="fill_parent"
+									android:layout_height="wrap_content"
+									android:textColor="#f0f0f0"
+									layout="@layout/terminal_settings"/>
+
+						 <Button
+							 android:layout_width="fill_parent"
+							 android:layout_height="wrap_content"
+							 android:layout_gravity="left"
+							 android:layout_marginTop="5dp"
+							 android:onClick="applySettings"
+							 android:text="Применить настройки"
+							 android:textColor="#f0f0f0"
+							 android:textSize="15sp"/>
+
+					</LinearLayout>
+				</RelativeLayout>
+         	</ru.iptvportal.player.ExpandablePanel>
+    <ProgressBar
+        android:id="@+id/loginprogressBarEPG"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/loginbutton1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="23dp" />
+    
+    	    	     
+	</RelativeLayout>
+	</ScrollView>
+		    	
+		    		
+</RelativeLayout>
