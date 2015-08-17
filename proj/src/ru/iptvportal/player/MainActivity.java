@@ -73,7 +73,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 	 private boolean _profile_pass_ok=false;
 	 boolean _data_ok=false;
 	 boolean _select_topic=true;
-	 VlcPlayer vv;
+	 VlcPlayer vv=null;
 	 ListView _ch_lv;
 	 ListView _t_lv;
 	 boolean _ignore_scroll=false;
@@ -169,6 +169,8 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 		app= (VideoApp)this.getApplication();
 
 		SurfaceView sv= (SurfaceView) findViewById(R.id.videoView1);
+//		if (vv!=null)
+	//		vv.release();
 		vv=new VlcPlayer(sv,this);
 		app.setVideoPlayer(vv);
 		
@@ -302,7 +304,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 					hnd.post(new Runnable(){
 						public void run(){
 							ChannelsConfig.Channel ch= app.getAppConfig().getCurChannel();
-							if (ch!=null)
+							if (ch!=null && vv!=null)
 							{
 								if (vv.isSeekable() && ch.playsArchive())
 									_player_pb.setProgress((int)(vv.getPosition()*1000));
@@ -521,7 +523,6 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 	@Override
 	public void onBackPressed()
 	{		
-		vv.release();
 		super.onBackPressed();	
 	}
 		
@@ -585,10 +586,27 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 		}
 		
 	}
+	
+	@Override 
+	protected void onStop(){
+		super.onStop();
+		if (vv!=null)
+			vv.stop();
+		
+	}
+	
 	@Override
 	protected void onDestroy(){
 		_player_pb.setOnSeekBarChangeListener(null);
 		super.onDestroy();
+		if (vv!=null)
+		{
+			app.setVideoPlayer(null);
+			vv.stop();
+	//		vv.release();
+		}
+		vv=null;
+		
 	}
 	
 	@Override
@@ -596,6 +614,12 @@ public class MainActivity extends Activity implements OnItemSelectedListener,OnC
 	{
 		//Log.d("MAINACT","onresume ");
 		super.onResume();
+		if (vv==null)
+		{
+			SurfaceView sv= (SurfaceView) findViewById(R.id.videoView1);
+			vv=new VlcPlayer(sv,this);
+		}
+		
 		if (app.getAppService().isLoggedIn() && checkConfig())
 		{
 			//Log.d("MAINACT","onresume initData");

@@ -50,14 +50,13 @@ public class VlcPlayer implements SurfaceHolder.Callback,IVideoPlayer {
         _act=act;
         try{ 
         _libvlc = LibVLC.getInstance();
+        _libvlc.init(_surface.getContext());
         _libvlc.setHardwareAcceleration(LibVLC.HW_ACCELERATION_FULL);
         _libvlc.setSubtitlesEncoding("");
         _libvlc.setAout(LibVLC.AOUT_OPENSLES);
 //        _libvlc.setTimeStretching(true);
         _libvlc.setChroma("RV32");
         _libvlc.setVerboseMode(false);
-        _libvlc.init(_surface.getContext());
-        //LibVLC.restart(_surface.getContext());
         EventHandler.getInstance().addHandler(mHandler);
         _holder.setFormat(PixelFormat.RGBX_8888);
         _holder.setKeepScreenOn(true);

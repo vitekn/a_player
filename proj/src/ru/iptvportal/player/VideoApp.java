@@ -1,8 +1,12 @@
 package ru.iptvportal.player;
 
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Enumeration;
 
 import org.videolan.libvlc.VlcPlayer;
 
@@ -12,6 +16,7 @@ import android.app.Application;
 import android.content.Context;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.text.format.Formatter;
 import android.util.Log;
 import android.view.animation.Animation;
 
@@ -73,13 +78,27 @@ public class VideoApp extends Application {
 		}		
 		private String getHW()
 		{
-			WifiManager manager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+			/*WifiManager manager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 			if (manager!=null)
 			{
 				WifiInfo info = manager.getConnectionInfo();
 				//return "00:11:22:33:44:53";
 				return info.getMacAddress();
-			}
+			}*/
+		    try {
+		        for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) 
+		        {
+		            NetworkInterface intf = en.nextElement();
+		            if (intf.isUp() && !intf.isLoopback())
+		            {
+		            	byte[] hw=intf.getHardwareAddress();
+		            	if (hw!=null)
+			            	return bytesToHex(hw);
+		            }
+		        }
+		    } catch (SocketException ex) {
+
+		    }
 			return "";
 		}
 		@Override
@@ -323,5 +342,19 @@ public class VideoApp extends Application {
         	_video_player.setCasPortal(getAppService()._portal_url);
 	}
 	protected void resetConfig(){_app_conf.reset();}
+
+	final protected static char[] hexArray = "0123456789ABCDEF".toCharArray();
+	public static String bytesToHex(byte[] bytes) {
+	    char[] hexChars = new char[bytes.length * 3];
+	    for ( int j = 0; j < bytes.length; j++ ) {
+	        int v = bytes[j] & 0xFF;
+	        hexChars[j * 3] = hexArray[v >>> 4];
+	        hexChars[j * 3 + 1] = hexArray[v & 0x0F];
+	        hexChars[j * 3 + 2] = ':';
+	    }
+	    String res=new String(hexChars);
+	    return res.substring(0,res.length()-1);
+	}
+	
 	
 }
